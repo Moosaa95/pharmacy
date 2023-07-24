@@ -1,25 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import PrivateRoutes from "./utils/PrivateRoute";
+// import Login from "./components/Login";
+// import Register from "./components/Register";
+import "./App.css";
+import Register from "./pages/register";
+import Login from "./pages/login";
+import Dashboard from "./pages/dashboard";
+import ShopHome from "./pages/shophome";
+import Medicines from "./pages/medicines/Index";
+import ShopList from "./pages/shops";
+import ShopDetail from "./pages/shop-details/ShopDetail";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      {/* <Router> */}
+      <Routes>
+        <Route element={<PrivateRoutes />}>
+          <Route element={<Dashboard />} path="/dashboard" exact />
+        </Route>
+          <Route element={<ShopHome />} path="/" />
+          <Route element={<Medicines />} path="/medicines" />
+          <Route element={<ShopList />} path="/shops" />
+        <Route element={<Login />} path="/login" exact />
+        <Route element={<Register />} path="/register" exact />
+        <Route path="shops/:shopId" element={<ShopDetail />} />
+      </Routes>
+      {/* </Router> */}
     </div>
   );
-}
+};
 
 export default App;
