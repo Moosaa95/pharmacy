@@ -43,11 +43,11 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../../styles/styles";
 
-const DropDown = ({ categoriesData, setDropDown }) => {
+const DropDown = ({ categoriesData, setDropDown, endpoint }) => {
   const navigate = useNavigate();
 
   const handleSubmit = (category) => {
-    navigate(`/medicines?category=${category}`);
+    navigate(`/${endpoint}=${category}`);
     setDropDown(false);
     // Avoid using window.location.reload() as it reloads the entire page. Instead, let the React Router handle the navigation.
   };

@@ -7,11 +7,12 @@ import Featured from '../../components/Route/featured/Featured'
 // import Event from '../../components/Route/events/Event'
 import Sponsored from "../../components/Route/sponsored/Sponsored.jsx"
 import Footer from "../../components/Layout/Footer"
+import { categoriesData } from '../../static/data'
 
 const ShopHome = () => {
   return (
     <div>
-      <Header activeHeading={1} />
+      <Header activeHeading={1} categoriesData={categoriesData} endpoint="medicine?category" />
       <Hero />
       <Categories />
       <BestDeals />

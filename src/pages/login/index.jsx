@@ -173,6 +173,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "../../styles/styles";
 import AuthContext from "../../context/AuthContext";
+import { useEffect } from "react";
 // import backgroundImage from "../../path/to/background-image.jpg";
 // import loginImage from "../../path/to/login-image.png";
 
@@ -183,29 +184,34 @@ const Login = () => {
   const [visible, setVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const isAuthenticated = true;
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add your form submission logic here4
     loginUser(email, password);
-
   };
 
   const { loginUser } = useContext(AuthContext);
 
-//   const handleEmailChange = (event) => {
-//     setEmail(event.target.value);
-//   };
+  //   const handleEmailChange = (event) => {
+  //     setEmail(event.target.value);
+  //   };
 
-//   const handlePasswordChange = (event) => {
-//     setPassword(event.target.value);
-//   };
+  //   const handlePasswordChange = (event) => {
+  //     setPassword(event.target.value);
+  //   };
 
-//   const handleSubmit = (event) => {
-//     event.preventDefault();
-//     loginUser(email, password);
-//   };
+  //   const handleSubmit = (event) => {
+  //     event.preventDefault();
+  //     loginUser(email, password);
+  //   };
 
   return (
     <div
@@ -290,13 +296,22 @@ const Login = () => {
                   Remember me
                 </label>
               </div>
-              <div className="text-sm">
+              {/* <div className="text-sm">
                 <a
                   href=".forgot-password"
                   className="font-medium text-green-600 hover:text-green-500"
                 >
                   Forgot your password?
                 </a>
+              </div> */}
+              <div className="text-sm">
+                {/* Add the link to the Forgot Password page */}
+                <Link
+                  to="/forgot-password"
+                  className="font-medium text-green-600 hover:text-green-500"
+                >
+                  Forgot your password?
+                </Link>
               </div>
             </div>
             {/* <div>

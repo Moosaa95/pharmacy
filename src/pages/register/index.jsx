@@ -424,7 +424,7 @@ const Register = () => {
             </div>
             <div className={`${styles.normalFlex} w-full`}>
               <h4>Already have an Account?</h4>
-              <Link to="/register" className="text-green-600 pl-2">
+              <Link to="/login" className="text-green-600 pl-2">
                 Sign In
               </Link>
             </div>

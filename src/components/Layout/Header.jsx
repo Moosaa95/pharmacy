@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "../../styles/styles";
 import { Link } from "react-router-dom";
-import { categoriesData, productData } from "../../static/data";
+import { productData } from "../../static/data";
 import {
   AiOutlineHeart,
   AiOutlineSearch,
@@ -17,6 +17,8 @@ import { BiMenuAltLeft } from "react-icons/bi";
 import DropDown from "./DropDown";
 import Navbar from "./Navbar";
 import { useSelector, useDispatch } from 'react-redux'
+import Cart from "../cart/Cart";
+import WishList from "../wishlist/WishList.jsx"
 
 // const Header = () => {
 //   const [searchItem, setSearchItem] = useState("");
@@ -104,12 +106,14 @@ const SearchResults = ({ searchData }) => {
   );
 };
 
-const Header = ({ activeHeading, selectedCategory }) => {
+const Header = ({ activeHeading, selectedCategory, categoriesData, endpoint }) => {
   const [searchItem, setSearchItem] = useState("");
   const [searchData, setSearchData] = useState([]);
   const [active, setActive] = useState(false);
   const [dropDown, setDropDown] = useState(false);
   const [showDropdown, setShowDropDown] = useState(false);
+  const [openCart, setOpenCart] = useState(false)
+  const [openWishList, setOpenWishList] = useState(false)
   // const {isAuthenticated, user} = useSelector((state) =>  state.user)
 
   const isAuthenticated = false; 
@@ -207,7 +211,7 @@ const Header = ({ activeHeading, selectedCategory }) => {
                 className={`h-[100%] w-full flex justify-between items-center pl-10 bg-white font-Poppins text-lg font-[500] select-none rounded-t-md`}
                 onClick={() => setShowDropDown(!showDropdown)}
               >
-                {selectedCategory ?selectedCategory :"All Categories"}
+                {selectedCategory ?selectedCategory :"All"}
                 {showDropdown ? (
                   <IoIosArrowUp size={20} className="cursor-pointer" />
                 ) : (
@@ -223,6 +227,7 @@ const Header = ({ activeHeading, selectedCategory }) => {
                 <DropDown
                   categoriesData={categoriesData}
                   setDropDown={setDropDown}
+                  endpoint={endpoint}
                 />
               )}
             </div>
@@ -233,7 +238,7 @@ const Header = ({ activeHeading, selectedCategory }) => {
           </div>
           <div className="flex">
             <div className={`${styles.normalFlex}`}>
-              <div className="relative cursor-pointer mr-[15px]">
+              <div className="relative cursor-pointer mr-[15px]" onClick={() => setOpenWishList(true)}>
                 <AiOutlineHeart size={30} color="rgb(255 255 255 / 83%)" />
                 <span className="absolute right-0 top-0 rounded-full bg-yellow-500 w-4 h-4 top right p-0 m-0 text-white font-Poppins text-[12px] leading-tight text-center">
                   0
@@ -241,10 +246,11 @@ const Header = ({ activeHeading, selectedCategory }) => {
               </div>
             </div>
             <div className={`${styles.normalFlex}`}>
-              <div className="relative cursor-pointer mr-[15px]">
+              <div className="relative cursor-pointer mr-[15px]" onClick={() => setOpenCart(true)}>
                 <AiOutlineShoppingCart
                   size={30}
                   color="rgb(255 255 255 / 83%)"
+                  
                 />
                 <span className="absolute right-0 top-0 rounded-full bg-yellow-500 w-4 h-4 top right p-0 m-0 text-white font-Poppins text-[12px] leading-tight text-center">
                   1
@@ -264,6 +270,18 @@ const Header = ({ activeHeading, selectedCategory }) => {
                 )}
               </div>
             </div>
+            {/* carts */}
+            {
+              openCart ? (
+                <Cart setOpenCart={setOpenCart} />
+              ) : null
+            }
+            {/* white list */}
+            {
+              openWishList ? (
+                <WishList setOpenWishList={setOpenWishList} />
+              ) : null
+            }
           </div>
         </div>
       </div>

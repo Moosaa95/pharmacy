@@ -14,6 +14,7 @@ import MedicineDetailCard from "../medicine-detail/MedicineDetailCard";
 const MedicineCard = ({ data }) => {
   const [click, setClick] = useState(false);
   const [open, setOpen] = useState(false);
+  
 
   
   const product_name = data?.name?.replace(/\$+/g, "-");
@@ -26,7 +27,7 @@ const MedicineCard = ({ data }) => {
     <>
       <div className="w-full h-[370px] bg-white rounded-lg shadow-sm p-3 relative cursor-pointer">
         <div className="flex justify-end"></div>
-        <Link to={`/medicines/${product_name}`}>
+        <Link to={`/medicine/${product_name}`}>
           <img
             src={data.image_Url[0].url}
             alt=""
@@ -36,7 +37,7 @@ const MedicineCard = ({ data }) => {
         <Link to="/">
           <h5 className={`${styles.shop_name}`}>{data.shop.name}</h5>
         </Link>
-        <Link to={`/medicines/${product_name}`}>
+        <Link to={`/medicine/${product_name}`}>
           <h4 className="pb-3 font-[500]">
             {data.name.length > 40 ? data.name.slice(0, 40) + "..." : data.name}
           </h4>

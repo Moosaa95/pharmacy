@@ -10,6 +10,9 @@ import ShopHome from "./pages/shophome";
 import Medicines from "./pages/medicines/Index";
 import ShopList from "./pages/shops";
 import ShopDetail from "./pages/shop-details/ShopDetail";
+import { MedicineDetailPage } from "./pages/medicine-detail/MedicineDetail";
+import ForgotPassword from "./pages/forgot-password";
+import VerifySuccess from "./pages/verify-success";
 
 const App = () => {
   return (
@@ -19,12 +22,15 @@ const App = () => {
         <Route element={<PrivateRoutes />}>
           <Route element={<Dashboard />} path="/dashboard" exact />
         </Route>
-          <Route element={<ShopHome />} path="/" />
-          <Route element={<Medicines />} path="/medicines" />
-          <Route element={<ShopList />} path="/shops" />
+        <Route element={<ShopHome />} path="/" />
+        <Route element={<Medicines />} path="/medicines" />
+        <Route element={<ShopList />} path="/shops" />
         <Route element={<Login />} path="/login" exact />
         <Route element={<Register />} path="/register" exact />
         <Route path="shops/:shopId" element={<ShopDetail />} />
+        <Route path="medicine/:medicineId" element={<MedicineDetailPage />} />
+        <Route exact path="/forgot-password" element={<ForgotPassword />} />
+        <Route exact path="/verify-success" element={<VerifySuccess />} />
       </Routes>
       {/* </Router> */}
     </div>

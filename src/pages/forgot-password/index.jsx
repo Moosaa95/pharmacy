@@ -10,6 +10,9 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+
+  console.log('forgot pad');
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add your form submission logic here

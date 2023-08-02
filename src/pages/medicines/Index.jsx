@@ -57,7 +57,7 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Header from "../../components/Layout/Header";
 import styles from "../../styles/styles";
-import { productData } from "../../static/data";
+import { categoriesData, productData } from "../../static/data";
 import MedicineCard from "../../components/Route/medicine-card/MedicineCard";
 
 const Medicines = () => {
@@ -66,7 +66,7 @@ const Medicines = () => {
   const [error, setError] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All Categories");
   const [searchParams] = useSearchParams();
-  const categoriesData = searchParams.get("category");
+  const categoriesDatas = searchParams.get("category");
 
   
   
@@ -77,8 +77,8 @@ const Medicines = () => {
     try {
       let d = productData;
 
-      if (categoriesData !== null) {
-        d = d.filter((i) => i.category === categoriesData);
+      if (categoriesDatas !== null) {
+        d = d.filter((i) => i.category === categoriesDatas);
       }
 
       d.sort((a, b) => a.total_sell - b.total_sell);
@@ -91,13 +91,13 @@ const Medicines = () => {
   };
 
   useEffect(() => {
-    setSelectedCategory(categoriesData? categoriesData : "All Categories"); // Update state once during initial render
+    setSelectedCategory(categoriesDatas? categoriesDatas : "All Categories"); // Update state once during initial render
     fetchData();
-  }, [categoriesData]);
+  }, [categoriesDatas]);
 
   return (
     <div>
-      <Header activeHeading={2} selectedCategory={selectedCategory} />
+      <Header activeHeading={2} selectedCategory={selectedCategory} categoriesData={categoriesData} endpoint="medicines?category" />
       <br />
       <br />
       <div className={`${styles.section}`}>

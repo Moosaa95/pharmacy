@@ -931,3 +931,13 @@ export const navItems = [
     // Add more shops as needed...
   ];
   
+
+  export const locationData = [
+    { id: 1, title: "Abuja", abbreviation: "FCT" },
+    { id: 2, title: "Lagos", abbreviation: "LOS" },
+    { id: 3, title: "Kano", abbreviation: "KAN" },
+    { id: 4, title: "Port Harcourt", abbreviation: "PHC" },
+    { id: 5, title: "Enugu", abbreviation: "ENU" },
+    { id: 6, title: "Ibadan", abbreviation: "IBD" },
+    // Add more locations with unique abbreviations as needed
+  ];
