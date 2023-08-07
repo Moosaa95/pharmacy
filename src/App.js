@@ -13,6 +13,7 @@ import ShopDetail from "./pages/shop-details/ShopDetail";
 import { MedicineDetailPage } from "./pages/medicine-detail/MedicineDetail";
 import ForgotPassword from "./pages/forgot-password";
 import VerifySuccess from "./pages/verify-success";
+import Profile from "./pages/profile";
 
 const App = () => {
   return (
@@ -31,6 +32,8 @@ const App = () => {
         <Route path="medicine/:medicineId" element={<MedicineDetailPage />} />
         <Route exact path="/forgot-password" element={<ForgotPassword />} />
         <Route exact path="/verify-success" element={<VerifySuccess />} />
+        <Route exact path="/profile" element={<Profile />} />
+
       </Routes>
       {/* </Router> */}
     </div>

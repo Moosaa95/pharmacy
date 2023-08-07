@@ -131,12 +131,17 @@ import {
   AiOutlineShoppingCart,
 } from "react-icons/ai";
 import styles from "../../../styles/styles";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { addTocart } from "../../../redux/actions/cart";
 
 const MedicineDetailCard = ({ data, setOpen }) => {
   // State for quantity count, wishlist, and cart
   const [count, setCount] = useState(1);
   const [wishlist, setWishlist] = useState(false);
-  const [cart, setCart] = useState(false);
+  // const [cart, setCart] = useState(false);
+  const { cart } = useSelector((state) => state.cart);
+  const dispatch = useDispatch()
 
   const handleMessageSubmit = () => {
     // Handle message submission
@@ -151,6 +156,21 @@ const MedicineDetailCard = ({ data, setOpen }) => {
   const handleIncrementCount = () => {
     setCount((prevCount) => prevCount + 1);
   };
+
+  const addToCartHandler = (id) => {
+    const isItemExists = cart && cart.find((i) => i.id === id)
+    if (isItemExists){
+      toast.error("item already exist")
+    }else{
+      if (data.stock < count) {
+        toast.error("Medicine stock limited!");
+      } else {
+        const cartData = { ...data, qty: count };
+        dispatch(addTocart(cartData));
+        toast.success("Item added to cart successfully!");
+      }
+    }
+  }
 
   return (
     <div className="fixed top-0 left-0 z-40 w-full h-screen bg-[#00000030] flex items-center justify-center">
@@ -257,7 +277,7 @@ const MedicineDetailCard = ({ data, setOpen }) => {
 
               <div
                 className={`${styles.button} mt-6 rounded h-11 flex items-center`}
-                onClick={() => setCart(true)}
+                onClick={() => addToCartHandler(data.id)}
               >
                 <span className="text-white flex items-center">
                   Add to Cart <AiOutlineShoppingCart className="ml-1" />

@@ -82,7 +82,7 @@ const MedicineCard = ({ data }) => {
             </span>
           </div>
         </Link>
-        <div>
+        <div className="items-end">
           {click ? (
             <AiFillHeart
               size={22}

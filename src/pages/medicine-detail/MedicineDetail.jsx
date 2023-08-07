@@ -4,10 +4,12 @@ import Header from '../../components/Layout/Header.jsx'
 import Footer from '../../components/Layout/Footer.jsx'
 import { useParams } from 'react-router-dom'
 import { productData } from '../../static/data.js'
+import SuggestedProuduct from '../../components/medicine-details/SuggestedProduct.jsx'
 export const MedicineDetailPage = () => {
     const {medicineId} = useParams()
     const [data, setData] = useState(null)
-    const medicineName = medicineId.replace(/-/, "")
+    // const medicineName = medicineId.replace(/-/, "")
+    const medicineName = medicineId.replace(/-/g, ""); //TODO: Fix for search 
 
 
         console.log(medicineId, 'hey', medicineName);
@@ -21,6 +23,10 @@ export const MedicineDetailPage = () => {
     <div>
         <Header activeHeading={2}/>
         <MedicineDetails data={data}/>
+        {
+        
+        data && <SuggestedProuduct data={data} />
+        }
         <Footer />
     </div>
   )

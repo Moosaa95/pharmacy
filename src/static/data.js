@@ -687,7 +687,7 @@ export const navItems = [
       discount_price: 5.49,
       rating: 4,
       total_sell: 100,
-      stock: 50,
+      stock: 5,
     },
     {
       id: 2,
@@ -765,7 +765,7 @@ export const navItems = [
       discount_price: 17.49,
       rating: 4.5,
       total_sell: 30,
-      stock: 15,
+      stock: 1,
     },
     {
       id: 7,
