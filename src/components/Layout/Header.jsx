@@ -221,13 +221,13 @@ const Header = ({
           <div className="space-x-2 items-center">
             {!user ? (
               <>
-                <div className="inline-block px-4 py-2 bg-green-500 text-white rounded-md transition-colors duration-300 hover:bg-green-600">
+                {/* <div className="inline-block px-4 py-2 bg-green-500 text-white rounded-md transition-colors duration-300 hover:bg-green-600">
                   <Link to="/pharmacy">
                     <h1 className="text-[#fff] flex items-center">
                       Own a Phamrcy? <IoIosArrowForward className="=ml-1" />
                     </h1>
                   </Link>
-                </div>
+                </div> */}
                 <div className="inline-block px-4 py-2 bg-green-500 text-white rounded-md transition-colors duration-300 hover:bg-green-600">
                   <Link to="/register">
                     {/* <p className="text-white text-sm">Don't have an account?</p>{" "} */}
@@ -414,13 +414,13 @@ const Header = ({
               <div className="space-x-2 pt-10 items-center">
                 {!user ? (
                   <>
-                    <div className="inline-block m-4 px-4 py-2 bg-green-500 text-white rounded-[4px] transition-colors duration-300 hover:bg-green-600">
+                    {/* <div className="inline-block m-4 px-4 py-2 bg-green-500 text-white rounded-[4px] transition-colors duration-300 hover:bg-green-600">
                       <Link to="/pharmacy">
                         <h1 className="text-[#fff] flex items-center">
                           Own a Phamrcy? <IoIosArrowForward className="=ml-1" />
                         </h1>
                       </Link>
-                    </div>
+                    </div> */}
                     <br />
                     <br />
                     <br />
