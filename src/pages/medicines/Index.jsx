@@ -53,35 +53,73 @@
 // export default Medicines;
 
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Header from "../../components/Layout/Header";
 import styles from "../../styles/styles";
-import { categoriesData, productData } from "../../static/data";
+// import { categoriesData, productData } from "../../static/data";
 import MedicineCard from "../../components/Route/medicine-card/MedicineCard";
+import AuthContext from "../../context/AuthContext";
+import { toast } from "react-toastify";
 
 const Medicines = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [categoriesData, setCategoriesData] = useState([])
   const [selectedCategory, setSelectedCategory] = useState("All Categories");
   const [searchParams] = useSearchParams();
   const categoriesDatas = searchParams.get("category");
 
+
+
+  const { fetchDrugs, fetchCategories } = useContext(AuthContext);
+  // const { fetchCategories } = useContext(AuthContext);/
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const categories = await fetchCategories();
+        setCategoriesData(categories); // Update state with fetched categories
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        toast.error(error);
+      }
+    };
+
+    fetchData();
+  }, [fetchCategories]);
+
+  // useEffect(() => {
+  //   const fetchDatas = async () => {
+  //     try {
+  //       const drugs = await fetchDrugs();
+  //       setCategoriesData(drugs); // Update state with fetched categories
+  //       setLoading(false);
+  //     } catch (error) {
+  //       console.error("Error fetching drugs:", error);
+  //       toast.error(error);
+  //     }
+  //   };
+
+  //   fetchDatas();
+  // }, [fetchDrugs]);
+
   
   
-  const fetchData = () => {
+  const fetchData = async () => {
     setLoading(true);
     setError(false);
 
     try {
-      let d = productData;
+      let d = await fetchDrugs();
 
       if (categoriesDatas !== null) {
-        d = d.filter((i) => i.category === categoriesDatas);
+        d = d.filter((i) => i.category__name === categoriesDatas);
       }
 
-      d.sort((a, b) => a.total_sell - b.total_sell);
+      d.sort((a, b) => a.total_sold - b.total_sold);
       setData(d);
     } catch (error) {
       setError(true);
@@ -89,6 +127,8 @@ const Medicines = () => {
       setLoading(false);
     }
   };
+
+  // console.log(categoriesData, data, 'fetcher');
 
   useEffect(() => {
     setSelectedCategory(categoriesDatas? categoriesDatas : "All Categories"); // Update state once during initial render

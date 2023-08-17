@@ -67,13 +67,13 @@ const Cart = ({ setOpenCart }) => {
 
   return (
     <div
-      className={`fixed top-0 left-0 bg-[#0000004b] w-full h-screen z-10 transition-opacity duration-300 ${
+      className={`fixed top-0 left-0 w-full bg-[#0000004b] w-full h-screen z-10 transition-opacity duration-300 ${
         visible ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
     >
       <div
         ref={cartRef}
-        className="fixed top-0 right-0 min-h-full w-[25%] bg-white flex flex-col justify-between shadow-sm"
+        className="fixed top-0 right-0 min-h-full w-[80%] 800px:w-[25%] bg-white flex flex-col justify-between shadow-sm"
       >
         <div>
           <div className="flex w-full justify-end pt-5 pr-5">
@@ -144,6 +144,7 @@ const CartSingle = ({ data, onQuantityChange, removeFromCartHandler }) => {
     onQuantityChange(updateCartData)
   }
 
+  console.log('cart', data);
   return (
     <div className="border-b p-4">
       <div className="w-full flex items-center justify-between">
@@ -162,7 +163,7 @@ const CartSingle = ({ data, onQuantityChange, removeFromCartHandler }) => {
             <HiOutlineMinus size={16} color="#7d879c" />
           </div>
         </div>
-        <img src="" alt="" className="w-[130px] h-min ml-2 mr-2 rounded-[5px]" />
+        <img src={data.image} alt="" className="w-[130px] h-min ml-2 mr-2 rounded-[5px]" />
         <div className="pl-[5px]">
           <h1>{data.name}</h1>
           <h4 className="font-[400] text-[15px] text-[#00000082">

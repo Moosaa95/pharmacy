@@ -1,43 +1,141 @@
-import React, { useState } from "react";
-import { AiOutlineArrowRight, AiOutlineCamera, AiOutlineDelete } from "react-icons/ai";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  AiOutlineArrowRight,
+  AiOutlineCamera,
+  AiOutlineDelete,
+} from "react-icons/ai";
 import { useSelector } from "react-redux";
 import styles from "../../styles/styles";
 import { Link } from "react-router-dom";
-import {Button} from "@mui/material"
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { Button } from "@mui/material";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { MdOutlineTrackChanges } from "react-icons/md";
-
+import AuthContext from "../../context/AuthContext";
+import { toast } from "react-toastify";
 
 const ProfileContent = ({ active }) => {
-  // const {user} = useSelector((state) => state.user)
-  const user = {
-    name: "musa",
-    email: "abzmossa@gmail.com",
-    phone: "213231212",
-    zipCode: 4444,
-    address: "plot 2",
-  };
-  const [name, setName] = useState(user && user.name);
-  const [email, setEmail] = useState(user && user.email);
-  const [phoneNumber, setPhoneNumber] = useState(user && user.phone);
-  const [zipCode, setZipCode] = useState(user && user.zipCode);
-  const [address, setAddress] = useState(user && user.address);
-  console.log(user, "hey");
+  const { user, updateProfile, fetchProfile, fetchOrder, changePassword } = useContext(AuthContext);
+  const [order, setOrder] = useState([])
+  const [users, setUsers] = useState({
+    first_name: "",
+    last_name: "",
+    middle_name: "",
+    email: "",
+    phone: "",
+    state: "",
+  });
+ 
+  const [selectedImage, setSelectedImage] = useState(null);
 
-  const handleSubmit = () => {};
+  console.log(user, "it is user in profile", order, typeof order);
+
+  // useEffect(() => {
+  //   const fetch
+  // }, [])
+
+  const fetchOrderData = async () => {
+    const orders = await fetchOrder(user && user.user_id)
+    if (orders){
+      setOrder(orders)
+    }
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const profile = await fetchProfile(user.user_id);
+        console.log("this is profile", profile, "user", user.user_id);
+        if (profile) {
+          const {first_name, last_name, middle_name, image, phone, state, email} = profile;
+          setUsers({
+            first_name: first_name,
+            last_name: last_name,
+            middle_name: middle_name,
+            email: email,
+            phone: phone,
+            state: state,
+            image:image
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      }
+    };
+
+    fetchData();
+    fetchOrderData()
+  }, [fetchProfile, user.user_id]);
+
+  const handleImageUpload = (e) => {
+    const imageFile = e.target.files[0];
+    setSelectedImage(imageFile);
+  };
+  console.log(users, "============HEY=======", user);
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("first_name", users.first_name);
+    formData.append("last_name", users.last_name);
+    formData.append("middle_name", users.middle_name);
+    formData.append("email", users.email);
+    formData.append("phone", users.phone);
+    formData.append("state", users.state);
+    formData.append("user_id", user && user.user_id);
+
+    if (selectedImage) {
+      formData.append("image", selectedImage);
+    }
+
+    try {
+      const updatedProfile = await updateProfile(formData);
+      if (updatedProfile) {
+        // Handle success
+        toast.success(updateProfile.message);
+        console.log("Profile updated successfully");
+      } else {
+        // Handle failure
+        toast.error(updateProfile.message);
+        console.log("Profile update failed");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  };
   return (
     <div className="w-full">
       {active === 1 && (
         <>
           <div className="flex justify-center w-full">
             <div className="relative">
-              <img
-                src="https://images.unsplash.com/photo-1688233599454-55e2ea1d8bfd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2132&q=80"
-                alt=""
-                className="w-[150px] h-[150px] rounded-full object-cover border-[3px] border-[#3ad132]"
-              />
-              <div className="w-[30px] h-[30px] bg-[#E3E9EE] rounded-full flex items-center justify-center cursor-pointer absolute bottom-[5px] right-[5px]">
-                <AiOutlineCamera size={20} />
+              {selectedImage ? (
+                <img
+                  src={URL.createObjectURL(selectedImage)}
+                  alt="Selected"
+                  className="w-[150px] h-[150px] rounded-full object-cover border-[3px] border-[#3ad132]"
+                />
+              ) : (
+                <img
+                  src={users && users.image}
+                  alt=""
+                  className="w-[150px] h-[150px] rounded-full object-cover border-[3px] border-[#3ad132]"
+                />
+              )}
+              <div>
+                {/* Your other components */}
+                <label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageUpload}
+                  />
+                  <div className="w-[30px] h-[30px] bg-[#E3E9EE] rounded-full flex items-center justify-center cursor-pointer absolute bottom-[5px] right-[5px]">
+                    <AiOutlineCamera size={20} />
+                  </div>
+                </label>
+                {/* Display the selected image */}
               </div>
             </div>
           </div>
@@ -48,26 +146,30 @@ const ProfileContent = ({ active }) => {
               <div className="w-full 800px:flex block  pb-3">
                 <div className="w-[100%] 800px:w-[50%]">
                   <label htmlFor="" className="block pb-2">
-                    FullName
+                    First Name
                   </label>
                   <input
                     type="text"
                     className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
                     required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={users.first_name}
+                    onChange={(e) =>
+                      setUsers({ ...users, first_name: e.target.value })
+                    }
                   />
                 </div>
                 <div className="w-[100%] 800px:w-[50%]">
                   <label htmlFor="" className="block pb-2">
-                    Email Address
+                    Last Name
                   </label>
                   <input
                     type="text"
                     className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
                     required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={users.last_name}
+                    onChange={(e) =>
+                      setUsers({ ...users, last_name: e.target.value })
+                    }
                   />
                 </div>
               </div>
@@ -80,8 +182,40 @@ const ProfileContent = ({ active }) => {
                     type="number"
                     className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
                     required
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    value={users.phone}
+                    onChange={(e) =>
+                      setUsers({ ...users, phone: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="w-[100%] 800px:w-[50%]">
+                  <label htmlFor="" className="block pb-2">
+                    Email Address
+                  </label>
+                  <input
+                    type="text"
+                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+                    required
+                    value={users.email}
+                    onChange={(e) =>
+                      setUsers({ ...users, email: e.target.value })
+                    }
+                    disabled
+                  />
+                </div>
+              </div>
+              {/* <div className="w-full 800px:flex block  pb-3">
+                <div className="w-[100%] 800px:w-[50%]">
+                  <label htmlFor="" className="block pb-2">
+                    Email Address
+                  </label>
+                  <input
+                    type="text"
+                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    disabled
                   />
                 </div>
                 <div className="w-[100%] 800px:w-[50%]">
@@ -96,33 +230,7 @@ const ProfileContent = ({ active }) => {
                     onChange={(e) => setZipCode(e.target.value)}
                   />
                 </div>
-              </div>
-              <div className="w-full 800px:flex block  pb-3">
-                <div className="w-[100%] 800px:w-[50%]">
-                  <label htmlFor="" className="block pb-2">
-                    Address
-                  </label>
-                  <input
-                    type="text"
-                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-                    required
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                  />
-                </div>
-                <div className="w-[100%] 800px:w-[50%]">
-                  <label htmlFor="" className="block pb-2">
-                    Zip code
-                  </label>
-                  <input
-                    type="text"
-                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-                    required
-                    value={zipCode}
-                    onChange={(e) => setZipCode(e.target.value)}
-                  />
-                </div>
-              </div>
+              </div> */}
               <input
                 type="submit"
                 className={`w-[250px] h-[40px] border-[#3a244b] text-[#3a244b] border text-center rounded-[3px] mt-8 cursor-pointer`}
@@ -136,54 +244,25 @@ const ProfileContent = ({ active }) => {
         <>
           <div>
             <div>
-              <AllOrder />
+              <AllOrder order={order} />
             </div>
           </div>
         </>
       )}
       {active === 3 && (
-        <>
-          <div>
-            <div>
-              <AllRefundOrders />
-            </div>
-          </div>
-        </>
+        <div>
+          <ChangePassword changePassword={changePassword} user_id={user && user.user_id} />
+        </div>
       )}
-      {active === 5 && (
-        <>
-          <div>
-            <div>
-              <TrackOrders />
-            </div>
-          </div>
-        </>
-      )}
-      {active === 6 && (
-        <>
-          <div>
-            <div>
-              <PaymentMethod />
-            </div>
-          </div>
-        </>
-      )}
-      {active === 7 && (
-        <>
-          <div>
-            <div>
-              <Address />
-            </div>
-          </div>
-        </>
-      )}
+      
     </div>
   );
 };
-const AllOrder = () => {
+const AllOrder = ({order}) => {
+  console.log('orrrder', order);
   const orders = [
     {
-      id: "1",
+      id: "2",
       orderItems: [
         {
           name: "paracetamol",
@@ -205,7 +284,8 @@ const AllOrder = () => {
       flex: 0.7,
       renderCell: (params) => {
         const status = params.value; // Get the value of the "status" field directly from params
-        const cellClass = status === "Delivered" ? "text-green-600" : "text-red-600";
+        const cellClass =
+          status === "Delivered" ? "text-green-600" : "text-red-600";
         return <p className={cellClass}>{status}</p>;
       },
     },
@@ -242,16 +322,17 @@ const AllOrder = () => {
       },
     },
   ];
+  console.log(typeof(order), order, typeof order);
 
-  const rows = orders.map((item) => ({
+  const rows = order.map((item) => ({
     id: item.id,
-    itemsQty: item.orderItems.length,
-    total: item.totalPrice,
-    status: item.orderStatus,
+    itemsQty: item.cart.length,
+    total: item.total_price,
+    status: item.status,
   }));
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <div style={{ height: 400, width: "100%" }}>
       <DataGrid
         rows={rows}
         columns={columns}
@@ -266,314 +347,97 @@ const AllOrder = () => {
   );
 };
 
-const AllRefundOrders = () => {
-  const refundOrders = [
-    {
-      id: "1",
-      orderItems: [
-        {
-          name: "paracetamol",
-        },
-      ],
-      itemsQty: 2,
-      totalPrice: 120,
-      refundStatus: "Refunded",
-    },
-    // Add more refund orders here if needed
-  ];
 
-  const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 1 },
-    {
-      field: "refundStatus",
-      headerName: "Refund Status",
-      minWidth: 150,
-      flex: 0.8,
-      renderCell: (params) => {
-        const status = params.value;
-        const cellClass = status === "Refunded" ? "text-green-600" : "text-red-600";
-        return <p className={cellClass}>{status}</p>;
-      },
-    },
-    {
-      field: "itemsQty",
-      headerName: "Item Qty",
-      type: "number",
-      minWidth: 130,
-      flex: 0.7,
-    },
-    {
-      field: "total",
-      headerName: "Total",
-      type: "number",
-      minWidth: 130,
-      flex: 0.8,
-      valueFormatter: (params) => `Ngr${params.value}`, // Format the "total" column value
-    },
-    {
-      field: "",
-      headerName: "",
-      type: "number",
-      minWidth: 130,
-      flex: 0.5,
-      sortable: false,
-      renderCell: (params) => {
-        return (
-          <Link to={`/refundOrder/${params.id}`}>
-            <Button>
-              <AiOutlineArrowRight size={20} />
-            </Button>
-          </Link>
-        );
-      },
-    },
-  ];
+const ChangePassword = ({changePassword, user_id}) => {
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  // const {changePassword} = useContext(AuthContext)
 
-  const rows = refundOrders.map((item) => ({
-    id: item.id,
-    itemsQty: item.orderItems.length,
-    total: item.totalPrice,
-    refundStatus: item.refundStatus,
-  }));
+  console.log('hey change passsword');
 
+  const passwordChangeHandler = async (e) => {
+    e.preventDefault();
+
+    if (newPassword !== confirmPassword) {
+      // Display an error message or perform any necessary action
+      toast.error("New password and confirm password do not match");
+      return;
+    }
+  
+  
+
+    try {
+      const changePass = await changePassword({old_password:oldPassword, new_password:newPassword, user_id:user_id});
+      if (changePass) {
+        // Handle success
+        toast.success(changePass.message);
+        setOldPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+      } else {
+        // Handle failure
+        toast.error(changePass.message);
+        console.log("password update failed");
+      }
+    } catch (error) {
+      // toast.error(error)
+      console.error("Error updating password:", error);
+    }
+
+
+    
+  }
   return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5, 10, 20]}
-        disableSelectionOnClick
-        slots={{
-          toolbar: GridToolbar
-        }}
-        // components={{
-        //   Toolbar: GridToolbar,
-        // }}
-      />
+    <div className="w-full px-5">
+      <h1 className="block text-[25px] text-center font-[600] text-[#000000ba] pb-2">
+        Change Password
+      </h1>
+      <div className="w-full">
+        <form
+          aria-required
+          onSubmit={passwordChangeHandler}
+          className="flex flex-col items-center"
+        >
+          <div className=" w-[100%] 800px:w-[50%] mt-5">
+            <label className="block pb-2">Enter your old password</label>
+            <input
+              type="password"
+              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+              required
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
+            />
+          </div>
+          <div className=" w-[100%] 800px:w-[50%] mt-2">
+            <label className="block pb-2">Enter your new password</label>
+            <input
+              type="password"
+              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+              required
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+          </div>
+          <div className=" w-[100%] 800px:w-[50%] mt-2">
+            <label className="block pb-2">Enter your confirm password</label>
+            <input
+              type="password"
+              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+              required
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            <input
+              className={`w-[95%] h-[40px] border border-[#3a24db] text-center text-[#3a24db] rounded-[3px] mt-8 cursor-pointer`}
+              required
+              value="Update"
+              type="submit"
+            />
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
-
-const TrackOrders = () => {
-  const trackOrders = [
-    {
-      id: "1",
-      orderItems: [
-        {
-          name: "paracetamol",
-        },
-      ],
-      itemsQty: 2,
-      totalPrice: 120,
-      trackStatus: "process",
-    },
-    // Add more refund orders here if needed
-  ];
-
-  const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 1 },
-    {
-      field: "trackStatus",
-      headerName: "Track Status",
-      minWidth: 150,
-      flex: 0.8,
-      renderCell: (params) => {
-        const status = params.value;
-        const cellClass = status === "Refunded" ? "text-green-600" : "text-red-600";
-        return <p className={cellClass}>{status}</p>;
-      },
-    },
-    {
-      field: "itemsQty",
-      headerName: "Item Qty",
-      type: "number",
-      minWidth: 130,
-      flex: 0.7,
-    },
-    {
-      field: "total",
-      headerName: "Total",
-      type: "number",
-      minWidth: 130,
-      flex: 0.8,
-      valueFormatter: (params) => `Ngr${params.value}`, // Format the "total" column value
-    },
-    {
-      field: "",
-      headerName: "",
-      type: "number",
-      minWidth: 130,
-      flex: 0.5,
-      sortable: false,
-      renderCell: (params) => {
-        return (
-          <Link to={`/trackOrder/${params.id}`}>
-            <Button>
-              <MdOutlineTrackChanges size={20} />
-            </Button>
-          </Link>
-        );
-      },
-    },
-  ];
-
-  const rows = trackOrders.map((item) => ({
-    id: item.id,
-    itemsQty: item.orderItems.length,
-    total: item.totalPrice,
-    trackStatus: item.trackStatus,
-  }));
-
-  return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5, 10, 20]}
-        disableSelectionOnClick
-        slots={{
-          toolbar: GridToolbar
-        }}
-        // components={{
-        //   Toolbar: GridToolbar,
-        // }}
-      />
-    </div>
-  );
-};
-
-// const TrackOrders = () => {
-//   const [orderId, setOrderId] = useState('');
-//   const [orderStatus, setOrderStatus] = useState(null);
-//   const [orderDetails, setOrderDetails] = useState(null);
-
-//   const handleTrackOrder = (event) => {
-//     event.preventDefault();
-//     // Here, you can add your logic to fetch the order details and status based on the orderId
-//     // For example, you can use an API call to get the order details and status.
-
-//     // Dummy data for demonstration purposes
-//     const trackedOrder = {
-//       id: "1",
-//       orderItems: [
-//         {
-//           name: "paracetamol",
-//         },
-//         // Add more items if needed
-//       ],
-//       itemsQty: 2,
-//       totalPrice: 120,
-//       orderStatus: "Delivered",
-//       // Add more order details as needed
-//     };
-
-//     if (trackedOrder) {
-//       setOrderStatus(trackedOrder.orderStatus);
-//       setOrderDetails(trackedOrder);
-//     } else {
-//       setOrderStatus('Not Found');
-//       setOrderDetails(null);
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <h2>Track Orders</h2>
-//       <form onSubmit={handleTrackOrder}>
-//         <input
-//           type="text"
-//           value={orderId}
-//           onChange={(e) => setOrderId(e.target.value)}
-//           placeholder="Enter Order ID"
-//         />
-//         <button type="submit">Track</button>
-//       </form>
-
-//       {orderStatus && (
-//         <div>
-//           <h3>Order Status: {orderStatus}</h3>
-//           {orderDetails && (
-//             <div>
-//               <p>Order ID: {orderDetails.id}</p>
-//               <p>Total Items: {orderDetails.itemsQty}</p>
-//               <p>Total Price: Ngr{orderDetails.totalPrice}</p>
-//               {/* Add more order details here as needed */}
-//             </div>
-//           )}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-const PaymentMethod = () => {
-  return (
-    <div className="w-full px-5">
-      <div className="flex w-full items-center justify-between">
-        <h1 className="text-[25px] font-[600] text-[#000000ba] pb-2">
-
-          Payment Method
-        </h1>
-        <div className={`${styles.button} rounded-md`}>
-          <span className="text-[#fff]">Add New</span>
-
-        </div>
-      </div>
-      <br />
-      <div className="w-full bg-white h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10">
-        <div className="flex items-center">
-          <img src="" alt="visa image" />
-          <h5 className="pl-5 font-[600]">
-            Musa
-          </h5>
-        </div>
-        <div className="pl-8 flex items-center">
-          <h6>1234 *** ****</h6>
-          <h5 className="pl-6">09/24</h5>
-        </div>
-        <div className="min-w-[10%] flex items-center justify-between pl-8">
-          <AiOutlineDelete size={25} className="cursor-pointer" />
-        </div>
-
-      </div>
-    </div>
-  )
-}
-
-const Address = () => {
-  return (
-    <div className="w-full px-5">
-      <div className="flex w-full items-center justify-between">
-        <h1 className="text-[25px] font-[600] text-[#000000ba] pb-2">
-
-          Address
-        </h1>
-        <div className={`${styles.button} rounded-md`}>
-          <span className="text-[#fff]">Add New</span>
-
-        </div>
-      </div>
-      <br />
-      <div className="w-full bg-white h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10">
-        <div className="flex items-center">
-          <h5 className="pl-5 font-[600]">
-            Default
-          </h5>
-        </div>
-        <div className="pl-8 flex items-center">
-          <h6>1233 plot weewwerwef sdsddsdsd </h6>
-        </div>
-        <div className="pl-8 flex items-center">
-          <h6>(213) 860 97</h6>
-        </div>
-        <div className="min-w-[10%] flex items-center justify-between pl-8">
-          <AiOutlineDelete size={25} className="cursor-pointer" />
-        </div>
-
-      </div>
-    </div>
-  )
-}
 export default ProfileContent;

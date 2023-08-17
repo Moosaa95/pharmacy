@@ -122,7 +122,7 @@
 
 // export default MedicineDetailCard;
 
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 import {
   AiFillHeart,
@@ -134,17 +134,31 @@ import styles from "../../../styles/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { addTocart } from "../../../redux/actions/cart";
+import {
+  addToWishlist,
+  removeFromWishlist,
+} from "../../../redux/actions/wishlist";
+import AuthContext from "../../../context/AuthContext";
 
 const MedicineDetailCard = ({ data, setOpen }) => {
   // State for quantity count, wishlist, and cart
   const [count, setCount] = useState(1);
-  const [wishlist, setWishlist] = useState(false);
-  // const [cart, setCart] = useState(false);
+  const [prescriptionFile, setPrescriptionFile] = useState(null);
+  const [click, setClick] = useState(false);
   const { cart } = useSelector((state) => state.cart);
-  const dispatch = useDispatch()
+  const { wishlist } = useSelector((state) => state.wishlist);
+  const dispatch = useDispatch();
 
+  const { savePrescription, user } = useContext(AuthContext);
+
+  // console.log('innder wish', data);
   const handleMessageSubmit = () => {
     // Handle message submission
+  };
+
+  const handlePrescriptionUpload = (e) => {
+    const file = e.target.files[0];
+    setPrescriptionFile(file);
   };
 
   const handleDecrementCount = () => {
@@ -157,20 +171,65 @@ const MedicineDetailCard = ({ data, setOpen }) => {
     setCount((prevCount) => prevCount + 1);
   };
 
-  const addToCartHandler = (id) => {
-    const isItemExists = cart && cart.find((i) => i.id === id)
-    if (isItemExists){
-      toast.error("item already exist")
-    }else{
-      if (data.stock < count) {
-        toast.error("Medicine stock limited!");
-      } else {
-        const cartData = { ...data, qty: count };
-        dispatch(addTocart(cartData));
-        toast.success("Item added to cart successfully!");
-      }
+  const addToCartHandler = async (id) => {
+    if (!prescriptionFile) {
+      toast.error("Please upload a prescription before adding to cart.");
+      return;
     }
-  }
+
+    console.log(prescriptionFile, "pres", user.user_id);
+
+    const formData = new FormData();
+
+    formData.append("drug_id", id);
+    formData.append("user_id", user.user_id);
+    formData.append("prescription_image", prescriptionFile);
+
+    const savePres = await savePrescription(formData);
+
+    console.log(savePres, "prescription");
+
+    if (savePres) {
+      toast.success(savePres.message);
+
+      const isItemExists = cart && cart.find((i) => i.id === id);
+      if (isItemExists) {
+        toast.error("item already exist");
+      } else {
+        if (data.stock < count) {
+          toast.error("Medicine stock limited!");
+        } else {
+          const cartData = {
+            ...data,
+            qty: count,
+            // prescription: prescriptionFile,
+          };
+          dispatch(addTocart(cartData));
+          toast.success("Item added to cart successfully!");
+        }
+      }
+    } else {
+      toast.error("prescription not saved please try again");
+    }
+  };
+
+  useEffect(() => {
+    if (wishlist && wishlist.find((i) => i.id === data.id)) {
+      setClick(true);
+    } else {
+      setClick(false);
+    }
+  }, [wishlist]);
+
+  const removeFromWishlistHandler = (data) => {
+    setClick(!click);
+    dispatch(removeFromWishlist(data));
+  };
+
+  const addToWishlistHandler = (data) => {
+    setClick(!click);
+    dispatch(addToWishlist(data));
+  };
 
   return (
     <div className="fixed top-0 left-0 z-40 w-full h-screen bg-[#00000030] flex items-center justify-center">
@@ -186,38 +245,38 @@ const MedicineDetailCard = ({ data, setOpen }) => {
             {/* Left Side - Product Image and Shop Details */}
             <div className="w-full md:w-[50%] md:pr-5">
               <img
-                src={data.image_Url[0]?.url}
+                src={data.images.Paracetamol_one}
                 alt={data.name}
                 className="w-full h-48 md:h-auto object-cover rounded-md mb-4"
               />
 
               <div className="flex items-start mb-4">
                 <img
-                  src={data.shop?.shop_avatar?.url}
-                  alt={data.shop?.name}
+                  src={data.pharmacy_profile__business_image}
+                  alt={data.business_name}
                   className="w-12 h-12 rounded-full mr-2"
                 />
                 <div>
                   <h3 className="text-base md:text-lg font-semibold">
-                    {data.shop?.name}
+                    {data.pharmacy__business_name}
                   </h3>
                   <p className="text-sm md:text-base text-gray-600">
-                    ({data.shop?.ratings}) ratings
+                    ({data.ratings}) ratings
                   </p>
                 </div>
               </div>
 
-              <div
+              {/* <div
                 className={`${styles.button} bg-[#000] mt-4 rounded h-11`}
                 onClick={handleMessageSubmit}
               >
                 <span className="text-white flex items-center">
                   Send Message <AiOutlineMessage className="ml-1" />
                 </span>
-              </div>
+              </div> */}
 
               <h5 className="text-sm text-red-400 mt-5">
-                ({data.total_sell}) Sold out
+                ({data.sold_out}) Sold out
               </h5>
             </div>
 
@@ -228,10 +287,10 @@ const MedicineDetailCard = ({ data, setOpen }) => {
 
               <div className="flex items-center mt-4">
                 <h4 className="text-lg md:text-xl font-semibold text-red-400">
-                  {data.discount_price}
+                  ${data.discount_price}
                 </h4>
                 <h3 className="text-base md:text-lg ml-2">
-                  {data.price ? `$${data.price}` : null}
+                  {data.original_price ? `$${data.original_price}` : null}
                 </h3>
               </div>
 
@@ -255,11 +314,11 @@ const MedicineDetailCard = ({ data, setOpen }) => {
                 </div>
 
                 <div>
-                  {wishlist ? (
+                  {click ? (
                     <AiFillHeart
                       size={30}
                       className="cursor-pointer"
-                      onClick={() => setWishlist(!wishlist)}
+                      onClick={() => removeFromWishlistHandler(data)}
                       color="red"
                       title="Remove from wishlist"
                     />
@@ -267,12 +326,23 @@ const MedicineDetailCard = ({ data, setOpen }) => {
                     <AiOutlineHeart
                       size={30}
                       className="cursor-pointer"
-                      onClick={() => setWishlist(!wishlist)}
+                      onClick={() => addToWishlistHandler(data)}
                       color="#333"
                       title="Add to wishlist"
                     />
                   )}
                 </div>
+                <label
+                  className={`${styles.button} text-white mt-4 rounded h-11`}
+                >
+                  Upload Prescription
+                  <input
+                    type="file"
+                    accept=".pdf, .jpg, .jpeg, .png"
+                    onChange={handlePrescriptionUpload}
+                    className="hidden"
+                  />
+                </label>
               </div>
 
               <div

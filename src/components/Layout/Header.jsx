@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "../../styles/styles";
 import { Link } from "react-router-dom";
 import { productData } from "../../static/data";
@@ -20,6 +20,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Cart from "../cart/Cart";
 import WishList from "../wishlist/WishList.jsx";
 import { RxCross2 } from "react-icons/rx";
+import AuthContext from "../../context/AuthContext";
 
 // const Header = () => {
 //   const [searchItem, setSearchItem] = useState("");
@@ -121,8 +122,47 @@ const Header = ({
   const [openCart, setOpenCart] = useState(false);
   const [openWishList, setOpenWishList] = useState(false);
   const [open, setOpen] = useState(false);
+  const [users, setUsers] = useState({
+    first_name: "",
+    last_name: "",
+    middle_name: "",
+    email: "",
+    phone: "",
+    state: "",
+  });
   const { cart } = useSelector((state) => state.cart);
+  const { wishlist } = useSelector((state) => state.wishlist);
   // const {isAuthenticated, user} = useSelector((state) =>  state.user)
+  const { user, fetchProfile } = useContext(AuthContext);
+
+  console.log('user now', user);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const profile = await fetchProfile(user.user_id);
+        if (profile) {
+          const {first_name, last_name, middle_name, image, phone, state, email} = profile;
+          setUsers({
+            first_name: first_name,
+            last_name: last_name,
+            middle_name: middle_name,
+            email: email,
+            phone: phone,
+            state: state,
+            image:image
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      }
+    };
+
+    fetchData();
+  }, [fetchProfile, user]);
+
+  console.log(user, "this is header user ");
 
   const isAuthenticated = false;
 
@@ -179,7 +219,7 @@ const Header = ({
             ) : null}
           </div>
           <div className="space-x-2 items-center">
-            {!isAuthenticated ? (
+            {!user ? (
               <>
                 <div className="inline-block px-4 py-2 bg-green-500 text-white rounded-md transition-colors duration-300 hover:bg-green-600">
                   <Link to="/pharmacy">
@@ -230,11 +270,6 @@ const Header = ({
                   <IoIosArrowDown size={20} className="cursor-pointer" />
                 )}
               </button>
-              {/* <IoIosArrowDown
-                size={20}
-                className="absolute right-2 top-4 cursor-pointer"
-                onClick={() => setDropDown(!dropDown)}
-              /> */}
               {showDropdown && (
                 <DropDown
                   categoriesData={categoriesData}
@@ -256,7 +291,7 @@ const Header = ({
               >
                 <AiOutlineHeart size={30} color="rgb(255 255 255 / 83%)" />
                 <span className="absolute right-0 top-0 rounded-full bg-yellow-500 w-4 h-4 top right p-0 m-0 text-white font-Poppins text-[12px] leading-tight text-center">
-                  0
+                  {wishlist && wishlist.length}
                 </span>
               </div>
             </div>
@@ -270,16 +305,16 @@ const Header = ({
                   color="rgb(255 255 255 / 83%)"
                 />
                 <span className="absolute right-0 top-0 rounded-full bg-yellow-500 w-4 h-4 top right p-0 m-0 text-white font-Poppins text-[12px] leading-tight text-center">
-                {cart && cart.length}
+                  {cart && cart.length}
                 </span>
               </div>
             </div>
             <div className={`${styles.normalFlex}`}>
               <div className="relative cursor-pointer mr-[15px]">
-                {isAuthenticated ? (
+                {user  ? (
                   <Link to="/profile">
                     <img
-                      src=""
+                      src={users && users.image}
                       alt="profile"
                       className="w-[35px] h-[35px] rounded-full"
                     />
@@ -290,6 +325,11 @@ const Header = ({
                   </Link>
                 )}
               </div>
+            </div>
+            <div className="bg-green-500 p-4 text-white">
+              <h1 className="text-1xl font-semibold">
+                Welcome {user ?  user.first_name : "user"}
+              </h1>
             </div>
             {/* carts */}
             {openCart ? <Cart setOpenCart={setOpenCart} /> : null}
@@ -316,18 +356,22 @@ const Header = ({
           </div>
           <div>
             <Link to="/">
-              <img src="" alt="logo" className="mt-3 cursor-pointer" />
+              <img src="https://images.unsplash.com/photo-1690040158054-04a19549b43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzfHx8ZW58MHx8fHx8&auto=format&fit=crop&w=500&q=60" alt="logo" className="mt-3 cursor-pointer w-[35px] h-[36px]" />
             </Link>
           </div>
           <div>
-            <div className="relative mr-[20px]">
+            <div className="relative mr-[20px]"  onClick={() => setOpenCart(true)}>
               <AiOutlineShoppingCart size={30} />
               <span className="absolute right-0 top-0 rounded-full bg-yellow-500 w-4 h-4 top right p-0 m-0 text-white font-Poppins text-[12px] leading-tight text-center">
-              {cart && cart.length}
-                
+                {cart && cart.length}
               </span>
             </div>
           </div>
+          {/* cart popup */}
+          {openCart ? <Cart setOpenCart={setOpenCart} /> : null}
+
+          {/* wishlist popup */}
+          {openWishList ? <WishList setOpenWishList={setOpenWishList} /> : null}
         </div>
         {/* header siderbar */}
         {open && (
@@ -335,13 +379,13 @@ const Header = ({
             <div className="fixed w-[60%] bg-[#fff] h-screen top-0 left-0 z-10 transform transition-transform ease-in-out duration-300">
               <div className="w-full justify-between flex pr-3">
                 <div>
-                  <div className="relative mr-[15px]">
+                  <div className="relative mr-[15px]" onClick={() => setOpenWishList(true) || setOpen(false)}>
                     <AiOutlineHeart
                       size={30}
                       className="mt-5 ml-3 transform transition-transform hover:scale-110"
                     />
                     <span className="absolute right-0 top-0 rounded-full bg-yellow-500 w-4 h-4 top right p-0 m-0 text-white font-Poppins text-[12px] leading-tight text-center">
-                      0
+                  {wishlist && wishlist.length}
                     </span>
                   </div>
                 </div>
@@ -368,43 +412,44 @@ const Header = ({
               <br />
 
               <div className="space-x-2 pt-10 items-center">
-            {!isAuthenticated ? (
-              <>
-                <div className="inline-block m-4 px-4 py-2 bg-green-500 text-white rounded-[4px] transition-colors duration-300 hover:bg-green-600">
-                  <Link to="/pharmacy">
-                    <h1 className="text-[#fff] flex items-center">
-                      Own a Phamrcy? <IoIosArrowForward className="=ml-1" />
-                    </h1>
-                  </Link>
-                </div>
-                <br />
-                <br />
-                <br />
-                <div className="flex w-full justify-around">
-                  <Link to="/register">
-                    {/* <p className="text-white text-sm">Don't have an account?</p>{" "} */}
-                    <h1 className="text-[18px] text-[#000000b7] flex items-center">
-                      Register 
-                    </h1>
-                  </Link>
-                  <Link to="/login">
-                    <h1 className="text-[18px] text-[#000000b7] flex items-center">
-                      Sign In 
-                    </h1>
-                  </Link>
-                </div>
-              
-              </>
-            ) : (
-              <div className="flex items-center justify-center">
-               <Link to="/profile">
-               <img src="" alt="profile pic" 
-                className="w-[60px] h-[60px] rounded-full border-[#0eac88] border-[3px]"
-                />
-               </Link>
+                {!user ? (
+                  <>
+                    <div className="inline-block m-4 px-4 py-2 bg-green-500 text-white rounded-[4px] transition-colors duration-300 hover:bg-green-600">
+                      <Link to="/pharmacy">
+                        <h1 className="text-[#fff] flex items-center">
+                          Own a Phamrcy? <IoIosArrowForward className="=ml-1" />
+                        </h1>
+                      </Link>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                    <div className="flex w-full justify-around">
+                      <Link to="/register">
+                        {/* <p className="text-white text-sm">Don't have an account?</p>{" "} */}
+                        <h1 className="text-[18px] text-[#000000b7] flex items-center">
+                          Register
+                        </h1>
+                      </Link>
+                      <Link to="/login">
+                        <h1 className="text-[18px] text-[#000000b7] flex items-center">
+                          Sign In
+                        </h1>
+                      </Link>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex items-center justify-center">
+                    <Link to="/profile">
+                      <img
+                        src={users && users.image}
+                        alt="profile pic"
+                        className="w-[60px] h-[60px] rounded-full border-[#0eac88] border-[3px]"
+                      />
+                    </Link>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
             </div>
           </div>
         )}

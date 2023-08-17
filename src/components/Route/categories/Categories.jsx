@@ -108,50 +108,81 @@
 
 // export default Categories;
 
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "../../../styles/styles";
-import { categoriesData, brandingData } from "../../../static/data";
+// import { categoriesData, brandingData } from "../../../static/data";
 import { useNavigate } from "react-router-dom";
-import {  FaFirstAid, FaPrescriptionBottleAlt, FaHeartbeat, FaPills } from 'react-icons/fa';
-import { GiHealthPotion, GiSyringe } from 'react-icons/gi';
+import {
+  FaFirstAid,
+  FaPrescriptionBottleAlt,
+  FaHeartbeat,
+  FaPills,
+} from "react-icons/fa";
+import { GiHealthPotion, GiSyringe } from "react-icons/gi";
+import AuthContext from "../../../context/AuthContext";
+import { toast } from "react-toastify";
 // import { ImSyringe } from 'react-icons/im';
 
 const brandingDatas = [
-    {
-      icon: <FaPills size={30} color='#3b82f6' />,
-      title: 'Medications',
-      Description: 'Explore a wide range of medications for various health conditions.',
-    },
-    {
-      icon: <GiHealthPotion size={30} color='#10b981' />,
-      title: 'Health Supplements',
-      Description: 'Discover essential health supplements to support your well-being.',
-    },
-    {
-      icon: <FaFirstAid size={30} color='#f59e0b' />,
-      title: 'First Aid',
-      Description: 'Find first aid essentials for minor injuries and emergencies.',
-    },
-    {
-      icon: <FaPrescriptionBottleAlt size={30} color='#6366f1' />,
-      title: 'Prescriptions',
-      Description: 'Get your prescriptions filled with ease and convenience.',
-    },
-    {
-      icon: <GiSyringe size={30} color='#ef4444' />,
-      title: 'Vaccinations',
-      Description: 'Stay protected with a range of vaccinations available.',
-    },
-    {
-      icon: <FaHeartbeat size={30} color='#ec4899' />,
-      title: 'Healthcare',
-      Description: 'Explore healthcare products to manage your health effectively.',
-    },
-  ];
-  
+  {
+    icon: <FaPills size={30} color="#3b82f6" />,
+    title: "Medications",
+    Description:
+      "Explore a wide range of medications for various health conditions.",
+  },
+  {
+    icon: <GiHealthPotion size={30} color="#10b981" />,
+    title: "Health Supplements",
+    Description:
+      "Discover essential health supplements to support your well-being.",
+  },
+  {
+    icon: <FaFirstAid size={30} color="#f59e0b" />,
+    title: "First Aid",
+    Description:
+      "Find first aid essentials for minor injuries and emergencies.",
+  },
+  {
+    icon: <FaPrescriptionBottleAlt size={30} color="#6366f1" />,
+    title: "Prescriptions",
+    Description: "Get your prescriptions filled with ease and convenience.",
+  },
+  {
+    icon: <GiSyringe size={30} color="#ef4444" />,
+    title: "Vaccinations",
+    Description: "Stay protected with a range of vaccinations available.",
+  },
+  {
+    icon: <FaHeartbeat size={30} color="#ec4899" />,
+    title: "Healthcare",
+    Description:
+      "Explore healthcare products to manage your health effectively.",
+  },
+];
 
 const Categories = () => {
   const navigate = useNavigate();
+  const [categoriesData, setCategoriesData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const { fetchCategories } = useContext(AuthContext);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const categories = await fetchCategories();
+        setCategoriesData(categories); // Update state with fetched categories
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        toast.error(error);
+      }
+    };
+
+    fetchData();
+  }, [fetchCategories]);
+
+  console.log(categoriesData, "categories");
 
   const handleCategoryClick = (categoryTitle) => {
     navigate(`/medicines?category=${categoryTitle}`);
@@ -166,7 +197,9 @@ const Categories = () => {
               <div className="flex items-start" key={brand.title}>
                 {brand.icon}
                 <div className="px-3">
-                  <h3 className="font-bold text-sm md:text-base">{brand.title}</h3>
+                  <h3 className="font-bold text-sm md:text-base">
+                    {brand.title}
+                  </h3>
                   <p className="text-xs md:text-sm">{brand.Description}</p>
                 </div>
               </div>
@@ -182,24 +215,30 @@ const Categories = () => {
           Categories in Pharmacy
         </h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:grid-cols-4">
-          {categoriesData &&
-            categoriesData.map((category) => (
-              <div
-                className="flex flex-col items-center p-4 cursor-pointer rounded-lg shadow-md hover:shadow-lg transform transition-all"
-                key={category.id}
-                onClick={() => handleCategoryClick(category.title)}
-              >
-                <img
-                  src={category.image_Url}
-                  alt={category.title}
-                  className="w-[120px] h-[120px] object-cover rounded-lg mb-3"
-                />
-                <h5 className="text-[18px] font-semibold leading-[1.3] text-gray-800">
-                  {category.title}
-                </h5>
-                {/* Add a short description here if needed */}
-              </div>
-            ))}
+          {loading ? (
+            <p>Please Wait... Categories Loading</p>
+          ) : (
+            <>
+              {categoriesData &&
+                categoriesData.map((category) => (
+                  <div
+                    className="flex flex-col items-center p-4 cursor-pointer rounded-lg shadow-md hover:shadow-lg transform transition-all"
+                    key={category.id}
+                    onClick={() => handleCategoryClick(category.id)}
+                  >
+                    <img
+                      src={category.image}
+                      alt={category.name}
+                      className="w-[120px] h-[120px] object-cover rounded-lg mb-3"
+                    />
+                    <h5 className="text-[18px] font-semibold leading-[1.3] text-gray-800">
+                      {category.name}
+                    </h5>
+                    {/* Add a short description here if needed */}
+                  </div>
+                ))}
+            </>
+          )}
         </div>
       </div>
     </>

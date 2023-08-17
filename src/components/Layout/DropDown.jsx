@@ -46,6 +46,8 @@ import styles from "../../styles/styles";
 const DropDown = ({ categoriesData, setDropDown, endpoint }) => {
   const navigate = useNavigate();
 
+  console.log('nav drop down', categoriesData);
+
   const handleSubmit = (category) => {
     navigate(`/${endpoint}=${category}`);
     setDropDown(false);
@@ -53,15 +55,15 @@ const DropDown = ({ categoriesData, setDropDown, endpoint }) => {
   };
 
   return (
-    <div className="pb-4 w-72 bg-white absolute z-30 rounded-b-md shadow-sm">
-      {categoriesData.map((category) => (
+    <div className="pb-4 w-[270px] bg-white absolute z-30 rounded-b-md shadow-sm">
+      {categoriesData && categoriesData.map((category, index) => (
         <div
           className={`${styles.normalFlex} cursor-pointer py-2 px-4 hover:bg-gray-100`}
-          key={category.id}
-          onClick={() => handleSubmit(category.title)}
+          key={index}
+          onClick={() => handleSubmit(category.name)}
         >
           <img
-            src={category.image_Url}
+            src={category.image}
             style={{
               width: "30%",
               height: "auto",
@@ -71,7 +73,7 @@ const DropDown = ({ categoriesData, setDropDown, endpoint }) => {
             }}
             alt=""
           />
-          <h3 className="ml-3 select-none">{category.title}</h3>
+          <h3 className="ml-3 select-none">{category.name}</h3>
         </div>
       ))}
     </div>

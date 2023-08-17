@@ -1,10 +1,11 @@
 // ... (imports and other code above)
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import ShopCards from '../../components/Route/shop-cards/ShopCards';
 import { locationData, shopData } from '../../static/data';
 import Header from '../../components/Layout/Header';
 import styles from '../../styles/styles';
 import { useSearchParams } from 'react-router-dom';
+import AuthContext from '../../context/AuthContext';
 
 const ShopList = () => {
   const [loading, setLoading] = useState(true);
@@ -13,42 +14,44 @@ const ShopList = () => {
   const [shopState, setShopState] = useState('');
   const [filteredShopData, setFilteredShopData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const { fetchPharmacies, fetchStates } = useContext(AuthContext);
 
+  console.log('heyyy');
 
   useEffect(() => {
     const loadData = async () => {
       try {
         setLoading(true);
         const stateParam = searchParams.get('state');
-        const data = await fetchShopData(stateParam);
+        console.log(stateParam, 'staee');
+        
+        const statesData = await fetchStates(); // Fetch the states data
+        const pharmaciesData = await fetchPharmacies(); // Fetch the pharmacies data
+
         setShopState(stateParam);
-        setFilteredShopData(data);
+        
+        if (stateParam) {
+          // Filter the pharmacies based on the selected state
+          const filteredData = pharmaciesData.filter((shop) => shop.state === stateParam);
+          setFilteredShopData(filteredData);
+        } else {
+          setFilteredShopData(pharmaciesData);
+        }
+        
         setLoading(false);
-        setSelectedCategory(stateParam? stateParam : "All"); // Update state once during initial render
+        setSelectedCategory(stateParam ? stateParam : "All");
         setError(false);
       } catch (error) {
         setLoading(false);
         setError(true);
       }
     };
+    
     loadData();
-  }, [searchParams]);
+  }, [searchParams, fetchPharmacies, fetchStates]);
 
-  const fetchShopData = async (state) => {
-    return new Promise((resolve, reject) => {
-      // Mock API call with a timeout to simulate asynchronous behavior
-      setTimeout(() => {
-        if (state) {
-          // Filter shopData based on the state if it's provided in the URL
-          const filteredData = shopData.filter((shop) => shop.state === state);
-          resolve(filteredData);
-        } else {
-          // If no state is provided, resolve with the entire shopData
-          resolve(shopData);
-        }
-      }, 1000); // Simulate a 1-second delay for the API call
-    });
-  };
+  console.log(filteredShopData, 'filtered');
+  
 
   return (
     <div>
@@ -74,7 +77,7 @@ const ShopList = () => {
                 All Shops
               </h2>
             )}
-            {filteredShopData.length > 0 ? (
+            {filteredShopData && filteredShopData.length > 0 ? (
               <ShopCards shopData={filteredShopData} />
             ) : (
               <h3 className="text-center text-lg font-semibold mt-4">

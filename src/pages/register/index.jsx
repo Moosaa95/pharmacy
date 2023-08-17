@@ -79,7 +79,7 @@
 
 // export default Register;
 
-import { React, useState, useContext } from "react";
+import { React, useState, useContext, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { RxAvatar } from "react-icons/rx";
@@ -92,7 +92,7 @@ import { toast } from "react-toastify";
 
 const Register = () => {
   const navigate = useNavigate();
-  const { registerUser } = useContext(AuthContext);
+  const { registerUser, fetchStates } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -103,12 +103,36 @@ const Register = () => {
   const [visible, setVisible] = useState(false);
   const [confirmVisible, setconfirmVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [avatar, setAvatar] = useState(null);
+  const [states, setStates] = useState([]);
+  const [state, setState] = useState("");
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
     setAvatar(file);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const states = await fetchStates();
+        setStates(states); // Update state with fetched categories
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching states:", error);
+        toast.error(error);
+      }
+    };
+
+    fetchData();
+  }, [fetchStates]);
+
+  // const nigerianStates = [
+  //   "Abia",
+  //   "Adamawa",
+  //   "Akwa Ibom" /* ... Add other states here ... */,
+  // ];
 
   const userTypes = [
     // { value: '', label: 'Select a user type' },
@@ -117,7 +141,7 @@ const Register = () => {
   ];
 
   const handleSubmit = async (e) => {
-    console.log('yes sir');
+    console.log("yes sir");
     e.preventDefault();
     setIsLoading(true);
     // Add your form submission logic here
@@ -132,13 +156,13 @@ const Register = () => {
         username,
         password,
         confirmPassword,
-        businessName,
-        userType
+        userType,
+        state
       );
       setIsLoading(false);
     } catch (error) {
       setError("Registration failed");
-      toast.error("failed")
+      toast.error("failed");
       setIsLoading(false);
       console.log("Registration failed", error);
     }
@@ -192,7 +216,7 @@ const Register = () => {
                   name="username"
                   autoComplete="username"
                   required
-                  value={email}
+                  value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
@@ -200,98 +224,23 @@ const Register = () => {
             </div>
             <div>
               <label
-                htmlFor="business"
+                htmlFor="username"
                 className="block text-sm font-medium text-gray-700"
               >
-                Business Name
+                User Type
               </label>
               <div className="mt-1">
                 <input
                   type="text"
-                  name="business"
-                  autoComplete="business"
+                  name="usertype"
+                  autoComplete="usertype"
                   required
-                  value={businessName}
-                  onChange={(e) => setBusinessName(e.target.value)}
+                  value={userType}
+                  onChange={(e) => setUserType(e.target.value)}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
               </div>
             </div>
-            <div>
-              <label
-                htmlFor="userType"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Select User Type
-              </label>
-              <div className="mt-1">
-                <select
-                  name="userType"
-                  id="userType"
-                  value={userType}
-                  onChange={(e) => setUserType(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                >
-                  {/* <option value="">Select a user type</option> */}
-                  {userTypes.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-                {/* <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                  <IoMdArrowDropdown />
-                </div> */}
-              </div>
-            </div>
-            {/* <div>
-              <label
-                htmlFor="state"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Select State
-              </label>
-              <div className="mt-1">
-                <select
-                  name="state"
-                  id="userType"
-                  value={userType}
-                  onChange={(e) => setUserType(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                >
-                  {userTypes.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              
-              </div>
-            </div>
-            <div>
-              <label
-                htmlFor="userType"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Select Lga
-              </label>
-              <div className="mt-1">
-                <select
-                  name="userType"
-                  id="userType"
-                  value={userType}
-                  onChange={(e) => setUserType(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                >
-                  {userTypes.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div> */}
-
             <div>
               <label
                 htmlFor="password"
@@ -354,6 +303,35 @@ const Register = () => {
                     onClick={() => setconfirmVisible(true)}
                   />
                 )}
+              </div>
+            </div>
+            <div>
+              <label
+                htmlFor="state"
+                className="block text-sm font-medium text-gray-700"
+              >
+                State
+              </label>
+              <div className="mt-1">
+                <select
+                  name="state"
+                  value={state}
+                  onChange={(e) => setState(e.target.value)} // Update selected state
+                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                >
+                  <option value="" disabled>
+                    Select a state
+                  </option>
+                  {loading ? (
+                    <option disabled>Loading...</option>
+                  ) : (
+                    states.map((stat) => (
+                      <option key={stat.id} value={stat.id}>
+                        {stat.name}
+                      </option>
+                    ))
+                  )}
+                </select>
               </div>
             </div>
 

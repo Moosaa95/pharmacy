@@ -1,18 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { productData } from "../../../static/data";
 import styles from "../../../styles/styles";
 import MedicineCard from "../medicine-card/MedicineCard";
+import AuthContext from "../../../context/AuthContext";
+import { toast } from "react-toastify";
 
 
 const BestDeals = () => {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true)
+  const {fetchDeals} = useContext(AuthContext)
+
 
   useEffect(() => {
-    const d =
-      productData && productData.sort((a, b) => b.total_sell - a.total_sell);
-    const firstFive = d.slice(0, 5);
-    setData(firstFive);
-  }, []);
+    const fetchData = async () => {
+      try {
+        const varData = await fetchDeals();
+        console.log(varData, 'best');
+        setData(varData); // Update state with fetched categories
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        toast.error(error);
+      }
+    };
+
+    fetchData();
+  }, [fetchDeals]);
+
+  // useEffect(() => {
+  //   const d =
+  //     productData && productData.sort((a, b) => b.total_sell - a.total_sell);
+  //   const firstFive = d.slice(0, 5);
+  //   setData(firstFive);
+  // }, []);
   return (
     <>
       <div className={`${styles.section}`}>
@@ -32,3 +53,6 @@ const BestDeals = () => {
 };
 
 export default BestDeals;
+
+
+

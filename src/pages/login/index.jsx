@@ -183,35 +183,24 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const {authTokens} = useContext(AuthContext)
+
+  console.log(authTokens, 'tokens');
 
   const isAuthenticated = true;
 
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/");
-    }
-  }, []);
+    authTokens && authTokens.access ? navigate("/") : navigate("/login")
+  }, [authTokens]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add your form submission logic here4
     loginUser(email, password);
   };
 
   const { loginUser } = useContext(AuthContext);
 
-  //   const handleEmailChange = (event) => {
-  //     setEmail(event.target.value);
-  //   };
-
-  //   const handlePasswordChange = (event) => {
-  //     setPassword(event.target.value);
-  //   };
-
-  //   const handleSubmit = (event) => {
-  //     event.preventDefault();
-  //     loginUser(email, password);
-  //   };
+  
 
   return (
     <div

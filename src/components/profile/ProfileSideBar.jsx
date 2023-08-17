@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { AiOutlineCreditCard, AiOutlineLogout, AiOutlineMessage } from 'react-icons/ai'
 import { HiOutlineReceiptRefund, HiOutlineShoppingCart } from 'react-icons/hi'
 import { RxPerson } from 'react-icons/rx'
@@ -6,16 +6,22 @@ import { useNavigate } from 'react-router-dom'
 import {MdOutlineTrackChanges} from "react-icons/md"
 import {TbAddressBook} from "react-icons/tb"
 import { toast } from "react-toastify";
+import { RiLockPasswordLine } from "react-icons/ri";
+
+import AuthContext from '../../context/AuthContext'
 
 const ProfileSideBar = ({active, setActive}) => {
     const navigate = useNavigate()
+
+    const {logoutUser} = useContext(AuthContext)
 
     const handleItemClick = (index) => {
         setActive(index);
     };
     const logoutHandler = () => {
-        toast.success("logout succeess")
         navigate("/login")
+        logoutUser()
+        toast.success("logout succeess")
 
     }
   return (
@@ -36,51 +42,24 @@ const ProfileSideBar = ({active, setActive}) => {
                 Orders
             </span>
         </div>
-        <div className="flex items-center cursor-pointer w-full mb-8"
+        <div
+        className="flex items-center cursor-pointer w-full mb-8"
         onClick={() => setActive(3)}
+      >
+        <RiLockPasswordLine size={20} color={active === 3 ? "green" : ""} />
+        <span
+          className={`pl-3 ${
+            active === 3 ? "text-[green]" : ""
+          } 800px:block hidden`}
         >
-            <HiOutlineReceiptRefund size={20} color={active === 3? "green" : ""} />
-            <span className={`pl-3 ${active === 3 ? "text-[green]" : ""} 800px:block hidden`}>
-                Refunds
-            </span>
-        </div>
+          Change Password
+        </span>
+      </div>
         <div className="flex items-center cursor-pointer w-full mb-8"
-        onClick={() => setActive(4)}
+        onClick={() => setActive(4) || logoutHandler()}
         >
-            <AiOutlineMessage size={20} color={active === 4? "green" : ""} />
+            <AiOutlineLogout size={20} color={active === 4? "green" : ""} />
             <span className={`pl-3 ${active === 4 ? "text-[green]" : ""} 800px:block hidden`}>
-                Inbox
-            </span>
-        </div>
-        <div className="flex items-center cursor-pointer w-full mb-8"
-        onClick={() => setActive(5)}
-        >
-            <MdOutlineTrackChanges size={20} color={active === 5? "green" : ""} />
-            <span className={`pl-3 ${active === 5 ? "text-[green]" : ""} 800px:block hidden`}>
-                Track Order
-            </span>
-        </div>
-        <div className="flex items-center cursor-pointer w-full mb-8"
-        onClick={() => setActive(6)}
-        >
-            <AiOutlineCreditCard size={20} color={active === 6? "green" : ""} />
-            <span className={`pl-3 ${active === 6 ? "text-[green]" : ""} 800px:block hidden`}>
-                Payment Method
-            </span>
-        </div>
-        <div className="flex items-center cursor-pointer w-full mb-8"
-        onClick={() => setActive(7)}
-        >
-            <TbAddressBook size={20} color={active === 7? "green" : ""} />
-            <span className={`pl-3 ${active === 7 ? "text-[green]" : ""} 800px:block hidden`}>
-                Address
-            </span>
-        </div>
-        <div className="flex items-center cursor-pointer w-full mb-8"
-        onClick={() => setActive(8) || logoutHandler()}
-        >
-            <AiOutlineLogout size={20} color={active === 8? "green" : ""} />
-            <span className={`pl-3 ${active === 8 ? "text-[green]" : ""} 800px:block hidden`}>
                 Logout 
             </span>
         </div>
