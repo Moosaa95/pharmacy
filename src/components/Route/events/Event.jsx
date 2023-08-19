@@ -1,10 +1,24 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
-import styles from '../../styles/styles'
+import styles from '../../../styles/styles';
 import EventCard from "./EventCard";
+import AuthContext from '../../../context/AuthContext';
 
 const Events = () => {
-  const {allEvents,isLoading} = useSelector((state) => state.events);  
+  const {fetchEvents} = useContext(AuthContext)
+  const [allEvents, setAllEvents] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+
+  // const {allEvents,isLoading} = useSelector((state) => state.events);
+  const getEvent = async () => {
+    const events  = await fetchEvents()
+    console.log(events, 'this is the event');
+    setAllEvents(events?.events)
+
+  }  
+  useEffect(() => {
+    getEvent()
+  }, [])
    
   return (
     <div>

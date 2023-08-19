@@ -4,7 +4,7 @@ import Hero from '../../components/Route/Hero/Hero'
 import Categories from '../../components/Route/categories/Categories'
 import BestDeals from '../../components/Route/best-deals/BestDeals'
 import Featured from '../../components/Route/featured/Featured'
-// import Event from '../../components/Route/events/Event'
+import Event from '../../components/Route/events/Event'
 import Sponsored from "../../components/Route/sponsored/Sponsored.jsx"
 import Footer from "../../components/Layout/Footer"
 import AuthContext from '../../context/AuthContext'
@@ -14,10 +14,13 @@ import { toast } from 'react-toastify'
 
 
 
+
 const ShopHome = () => {
   console.log('inner structure');
   const [categoriesData, setCategoriesData] = useState('')
   const [loading, setLoading] = useState(true)
+  const [allMedicine, setAllMedicine] = useState([]);
+  const { fetchDrugs } = useContext(AuthContext);
 
   const {fetchCategories}  = useContext(AuthContext)
 
@@ -36,14 +39,28 @@ const ShopHome = () => {
     fetchData();
   }, [fetchCategories]);
 
+
+
+
+  useEffect(() => {
+    const fetchMedicine = async () => {
+      const fetchedMedicine = await fetchDrugs();
+      if (fetchedMedicine) {
+        setAllMedicine(fetchedMedicine);
+      }
+    };
+
+    fetchMedicine();
+  }, []);
+
   console.log(categoriesData, 'category');
   return (
     <div>
       <Header activeHeading={1} categoriesData={categoriesData} endpoint="medicine?category" />
       <Hero />
       <Categories />
-      <BestDeals />
-      {/* <Event /> */}
+      <BestDeals allMedicine={allMedicine} />
+      <Event />
       <Featured />
       <Sponsored />
       <Footer />

@@ -801,22 +801,22 @@ export const navItems = [
       name: "Home",
       link: "/",
     },
-    {
-      name: "Best Selling",
-      link: "/best-selling",
-    },
+    // {
+    //   name: "Best Selling",
+    //   link: "/best-selling",
+    // },
     {
       name: "Medicines",
-      link: "/list-of-medicines",
+      link: "/medicines",
     },
     {
       name: "List of Shops",
-      link: "/list-of-shops",
+      link: "/shops",
     },
-    {
-      name: "FAQ",
-      link: "/faq",
-    },
+    // {
+    //   name: "FAQ",
+    //   link: "/faq",
+    // },
     // {
     //   name: "About us",
     //   link: "/about"

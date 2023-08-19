@@ -135,8 +135,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 
-// const server = "http://localhost:8000"
-const server = "https://pharmexxx.pythonanywhere.com"
+const server = "http://localhost:8000"
+// const server = "https://pharmexxx.pythonanywhere.com"
 
 
 const AuthContext = createContext();
@@ -622,6 +622,30 @@ const ActivateAccount = async (uidb64, token) => {
   }
 }
 
+const fetchEvents = async () => {
+  try {
+    const response = await fetch(
+      `${server}/accounts/get-events/`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching drugs:", error);
+    return null;
+  }
+};
+
   const logoutUser = () => {
     setAuthTokens(null);
     setUser(null);
@@ -651,7 +675,8 @@ const ActivateAccount = async (uidb64, token) => {
     fetchOrder,
     changePassword,
     fetchDrug,
-    ActivateAccount
+    ActivateAccount,
+    fetchEvents
   };
 
 

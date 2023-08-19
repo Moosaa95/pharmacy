@@ -163,7 +163,7 @@ const Footer = () => {
           ))}
         </ul>
 
-        <ul className="text-center sm:text-left">
+        {/* <ul className="text-center sm:text-left">
           <h1 className="text-xl font-semibold mb-4">Shops</h1>
           {footerCompanyLinks.map((link, index) => (
             <li key={index} className="mb-3">
@@ -175,7 +175,7 @@ const Footer = () => {
               </Link>
             </li>
           ))}
-        </ul>
+        </ul> */}
         {/* Add more columns as needed */}
       </div>
       <div className="flex justify-between items-center px-8 pb-4 text-gray-400 text-sm">

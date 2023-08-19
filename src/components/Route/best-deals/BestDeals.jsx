@@ -1,54 +1,35 @@
-import React, { useContext, useEffect, useState } from "react";
-import { productData } from "../../../static/data";
+
+
+import React, { useState, useEffect } from "react";
 import styles from "../../../styles/styles";
 import MedicineCard from "../medicine-card/MedicineCard";
-import AuthContext from "../../../context/AuthContext";
-import { toast } from "react-toastify";
 
-
-const BestDeals = () => {
+const BestDeals = ({ allMedicine }) => {
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true)
-  const {fetchDeals} = useContext(AuthContext)
-
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const varData = await fetchDeals();
-        console.log(varData, 'best');
-        setData(varData); // Update state with fetched categories
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        toast.error(error);
-      }
-    };
+    const sortedData = allMedicine?.sort((a, b) => b.sold_out - a.sold_out);
+    const firstFive = sortedData && sortedData.slice(0, 5);
+    setData(firstFive);
+  }, [allMedicine]);
 
-    fetchData();
-  }, [fetchDeals]);
-
-  // useEffect(() => {
-  //   const d =
-  //     productData && productData.sort((a, b) => b.total_sell - a.total_sell);
-  //   const firstFive = d.slice(0, 5);
-  //   setData(firstFive);
-  // }, []);
   return (
-    <>
+    <div>
       <div className={`${styles.section}`}>
         <div className={`${styles.heading}`}>
-            <h1>Best Deals</h1>
+          <h1>Best Deals</h1>
         </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:grid-cols-4">
-            {
-                data && data.map((i, index) => (
-                    <MedicineCard data={i} key={index} />
-                ))
-            }
+        <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-4 lg:gap-[25px] xl:grid-cols-5 xl:gap-[30px] mb-12 border-0">
+          {data && data.length !== 0 && (
+            <>
+              {data.map((i, index) => (
+                <MedicineCard data={i} key={index} />
+              ))}
+            </>
+          )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
