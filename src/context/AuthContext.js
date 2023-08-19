@@ -598,6 +598,29 @@ const changePassword = async (formData) => {
   }
 };
 
+const ActivateAccount = async (uidb64, token) => {
+  try {
+    const response = await fetch(
+      `${server}/accounts/api/activate/${uidb64}/${token}/`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching drug:", error);
+    return null;
+  }
+}
 
   const logoutUser = () => {
     setAuthTokens(null);
@@ -628,6 +651,7 @@ const changePassword = async (formData) => {
     fetchOrder,
     changePassword,
     fetchDrug,
+    ActivateAccount
   };
 
 

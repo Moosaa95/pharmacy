@@ -59,7 +59,7 @@ const App = () => {
         <Route element={<Login />} path="/login" />
         <Route element={<Register />} path="/register" />
         <Route exact path="/forgot-password" element={<ForgotPassword />} />
-        <Route exact path="/verify-success" element={<VerifySuccess />} />
+        <Route exact path="/accounts/api/activate/:uidb64/:token" element={<VerifySuccess />} />
       </Routes>
       {/* </Router> */}
     </div>
