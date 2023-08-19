@@ -135,8 +135,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 
-const server = "http://localhost:8000"
-// const server = "https://pharmexxx.pythonanywhere.com"
+// const server = "http://localhost:8000"
+const server = "https://pharmexxx.pythonanywhere.com"
 
 
 const AuthContext = createContext();
