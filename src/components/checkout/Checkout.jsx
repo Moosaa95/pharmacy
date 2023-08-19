@@ -28,12 +28,14 @@ const Checkout = () => {
   const [couponCode, setCouponCode] = useState("");
   const [couponCodeData, setCouponCodeData] = useState(null);
   const [discountPrice, setDiscountPrice] = useState(null);
+  const [email, setEmail] = useState()
+  const [phoneNumber, setPhoneNumber] = useState()
+  const [fullName, setFullName] = useState()
   const navigate = useNavigate();
 
-  const {user} = useContext(AuthContext)
+  const { user } = useContext(AuthContext);
 
-  console.log('new user', user.last_name);
-
+  console.log("new user", user.last_name);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -41,16 +43,16 @@ const Checkout = () => {
 
   useEffect(() => {
     const previousOrderJSON = localStorage.getItem("cartItems");
-    console.log(previousOrderJSON, 'Json  ');
+    console.log(previousOrderJSON, "Json  ");
 
     if (previousOrderJSON) {
       const previousOrder = JSON.parse(previousOrderJSON);
-      console.log(previousOrder, 'orderrrrrr');
-      const file = previousOrder.map(prev => ({
+      console.log(previousOrder, "orderrrrrr");
+      const file = previousOrder.map((prev) => ({
         prescription: prev.prescription,
-        drug_id: prev.id
+        drug_id: prev.id,
       }));
-      console.log(file, 'ppf');
+      console.log(file, "ppf");
 
       setNFile(file);
     }
@@ -104,33 +106,6 @@ const Checkout = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const name = couponCode;
-
-    // await axios.get(`${server}/coupon/get-coupon-value/${name}`).then((res) => {
-    //   const shopId = res.data.couponCode?.shopId;
-    //   const couponCodeValue = res.data.couponCode?.value;
-    //   if (res.data.couponCode !== null) {
-    //     const isCouponValid =
-    //       cart && cart.filter((item) => item.shopId === shopId);
-
-    //     if (isCouponValid.length === 0) {
-    //       toast.error("Coupon code is not valid for this shop");
-    //       setCouponCode("");
-    //     } else {
-    //       const eligiblePrice = isCouponValid.reduce(
-    //         (acc, item) => acc + item.qty * item.discountPrice,
-    //         0
-    //       );
-    //       const discountPrice = (eligiblePrice * couponCodeValue) / 100;
-    //       setDiscountPrice(discountPrice);
-    //       setCouponCodeData(res.data.couponCode);
-    //       setCouponCode("");
-    //     }
-    //   }
-    //   if (res.data.couponCode === null) {
-    //     toast.error("Coupon code doesn't exists!");
-    //     setCouponCode("");
-    //   }
-    // });
   };
 
   const discountPercentenge = couponCodeData ? discountPrice : "";
@@ -159,6 +134,12 @@ const Checkout = () => {
             setAddress2={setAddress2}
             zipCode={zipCode}
             setZipCode={setZipCode}
+            setEmail={setEmail}
+            email={email}
+            setPhoneNumber={setPhoneNumber}
+            setFullName={setFullName}
+            phoneNumber={phoneNumber}
+            fullName={fullName}
           />
         </div>
         <div className="w-full 800px:w-[35%] 800px:mt-0 mt-8">
@@ -190,6 +171,12 @@ const ShippingInfo = ({
   setCountry,
   city,
   setCity,
+  fullName,
+  setFullName,
+  email,
+  setEmail,
+  phoneNumber,
+  setPhoneNumber,
   userInfo,
   setUserInfo,
   address1,
@@ -209,18 +196,20 @@ const ShippingInfo = ({
             <label className="block pb-2">Full Name</label>
             <input
               type="text"
-              value={user && `${user.first_name} ${user.last_name}` }
+              value={fullName}
               required
               className={`${styles.input} !w-[95%]`}
+              onChange={(e) => setFullName(e.target.value)}
             />
           </div>
           <div className="w-[50%]">
             <label className="block pb-2">Email Address</label>
             <input
               type="email"
-              value={user && user.email}
+              value={email}
               required
               className={`${styles.input}`}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
         </div>
@@ -231,8 +220,9 @@ const ShippingInfo = ({
             <input
               type="number"
               required
-              value={user && user.phoneNumber}
+              value={phoneNumber}
               className={`${styles.input} !w-[95%]`}
+              onChange={(e) => setPhoneNumber(e.target.value)}
             />
           </div>
           <div className="w-[50%]">
@@ -351,7 +341,7 @@ const CartData = ({
   couponCode,
   setCouponCode,
   discountPercentenge,
-  prescriptionFile
+  prescriptionFile,
 }) => {
   return (
     <div className="w-full bg-[#fff] rounded-md p-5 pb-8">
@@ -378,8 +368,7 @@ const CartData = ({
         <h5 className="text-[18px] font-[600] ">${totalPrice}</h5>
       </div>
       <br />
-        <img src={prescriptionFile} alt="pisses" className="pt-3"/>
-    
+      <img src={prescriptionFile} alt="pisses" className="pt-3" />
     </div>
   );
 };

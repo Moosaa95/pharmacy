@@ -23,6 +23,7 @@ const Payment = () => {
   const [cardNumber, setCardNumber] = useState("");
   const [cvv, setCvv] = useState("");
   const [expDate, setExpDate] = useState("");
+  const [cardName, setCardName] = useState("");
   //   const { user } = useSelector((state) => state.user);
   // const user = { name: "moosa", email: "mm@gmail.com" };
   const navigate = useNavigate();
@@ -109,6 +110,8 @@ const Payment = () => {
             cardNumber={cardNumber}
             paymentHandler={paymentHandler}
             cashOnDeliveryHandler={cashOnDeliveryHandler}
+            setCardName={setCardName}
+            cardName={cardName}
           />
         </div>
         <div className="w-full 800px:w-[35%] 800px:mt-0 mt-8">
@@ -121,11 +124,13 @@ const Payment = () => {
 
 const PaymentInfo = ({
   setCardNumber,
+  setCardName,
   setExpDate,
   setCvv,
   cvv,
   expDate,
   cardNumber,
+  cardName,
   user,
   paymentHandler,
   cashOnDeliveryHandler,
@@ -145,6 +150,10 @@ const PaymentInfo = ({
     const input = event.target.value.replace(/\s/g, "");
     const formatted = input.slice(0, 3);
     setCvv(formatted);
+  };
+
+  const handleCardName = (event) => {
+    setCardName(event.target.value);
   };
 
   const handleExpDateChange = (event) => {
@@ -192,8 +201,10 @@ const PaymentInfo = ({
                   required
                   id="cardName"
                   className={`w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#f63b60] focus:border-[#f63b60] ${styles.input}`}
-                  placeholder={user && user.first_name}
-                  value={user && user.first_name}
+                  placeholder="card name"
+                  value={cardName}
+                  onChange={(e) => setCardName(e.target.value)}
+
                 />
               </div>
 
