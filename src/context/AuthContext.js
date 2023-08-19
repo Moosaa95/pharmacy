@@ -650,8 +650,9 @@ const fetchEvents = async () => {
     setAuthTokens(null);
     setUser(null);
     localStorage.removeItem("authTokens");
-    localStorage.removeItem("cartItems");
-    localStorage.removeItem("lastestOrders");
+    localStorage.setItem("authTokens", JSON.stringify([]));
+    localStorage.setItem("cartItems", JSON.stringify([]));
+      localStorage.setItem("latestOrder", JSON.stringify([]));
     navigate("/login");
   };
 
