@@ -19,7 +19,7 @@ const OrderSuccessPage = () => {
 const Success = () => {
   return (
     <div>
-      <Lottie animationData={animationData} width={300} height={300} />
+      <Lottie animationData={animationData} width={150} height={150} />
       <h5 className="text-center mb-14 text-[25px] text-[#000000a1]">
         Your order is successful 😍
       </h5>
