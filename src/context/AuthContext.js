@@ -135,8 +135,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 
-// const server = "http://localhost:8000"
-const server = "https://pharmexxx.pythonanywhere.com"
+const server = "http://localhost:8000"
+// const server = "https://pharmexxx.pythonanywhere.com"
 
 
 const AuthContext = createContext();
@@ -195,7 +195,7 @@ export const AuthProvider = ({ children }) => {
 
         if (decodedToken.usertype === "pharmacy") {
           setUser(decodedToken);
-          navigate("/dashboard");
+          navigate("/admin-dashboard");
         } else if (decodedToken.usertype === "user") {
           console.log("hey");
           setUser(decodedToken);
@@ -646,6 +646,30 @@ const fetchEvents = async () => {
   }
 };
 
+const fetchOrders = async () => {
+  try {
+    const response = await fetch(
+      `${server}/accounts/get-orders/`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching order:", error);
+    return null;
+  }
+};
+
   const logoutUser = () => {
     setAuthTokens(null);
     setUser(null);
@@ -677,7 +701,8 @@ const fetchEvents = async () => {
     changePassword,
     fetchDrug,
     ActivateAccount,
-    fetchEvents
+    fetchEvents,
+    fetchOrders
   };
 
 

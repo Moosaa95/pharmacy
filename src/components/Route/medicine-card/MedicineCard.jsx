@@ -72,7 +72,7 @@ const MedicineCard = ({ data, number_of_item }) => {
         <div className="flex justify-end"></div>
         <Link to={`/medicine/${data.id}`}>
           <img
-            src={data.images.Paracetamol_one}
+            src={data.images.drug_one}
             alt=""
             className="w-full h-[170px] object-contain"
           />
@@ -85,7 +85,7 @@ const MedicineCard = ({ data, number_of_item }) => {
             {data.name.length > 40 ? data.name.slice(0, 40) + "..." : data.name}
           </h4>
           <StarRating rating={data.ratings} />
-          <div className="py-2 flex items-center justify-between">
+          <div className="flex items-center justify-between py-2">
             <div className="flex">
               <h5 className={`${styles.productDiscountPrice}`}>
                 {data.original_price === 0 ? data.original_price : data.discount_price}$
@@ -103,7 +103,7 @@ const MedicineCard = ({ data, number_of_item }) => {
           {click ? (
             <AiFillHeart
               size={22}
-              className="cursor-pointer absolute right-2 top-5"
+              className="absolute cursor-pointer right-2 top-5"
               onClick={() => removeFromWishlistHandler(data)}
               color={click ? "red" : "#333"}
               title="Remove from wishlist"
@@ -111,7 +111,7 @@ const MedicineCard = ({ data, number_of_item }) => {
           ) : (
             <AiOutlineHeart
               size={22}
-              className="cursor-pointer absolute right-2 top-5"
+              className="absolute cursor-pointer right-2 top-5"
               onClick={() => addToWishlistHandler(data)}
               color={click ? "red" : "#333"}
               title="Add to wishlist"
@@ -119,14 +119,14 @@ const MedicineCard = ({ data, number_of_item }) => {
           )}
            <AiOutlineEye
               size={22}
-              className="cursor-pointer absolute right-2 top-14"
+              className="absolute cursor-pointer right-2 top-14"
               onClick={() => setOpen(!open)}
               color="#333"
               title="quick view"
             />
             <AiOutlineShoppingCart
               size={25}
-              className="cursor-pointer absolute right-2 top-24"
+              className="absolute cursor-pointer right-2 top-24"
               onClick={() => addToCartHandler(data.id)}
               color="#444"
               title="Add to cart"
@@ -189,7 +189,7 @@ export default MedicineCard;
 //           <AiFillStar size={20} color="#f6ba68" className="mr-2 cursor-pointer" />
 //           <AiOutlineStar size={20} color="#f6ba68" className="mr-2 cursor-pointer" />
 //         </div>
-//         <div className="py-2 flex items-center justify-between">
+//         <div className="flex items-center justify-between py-2">
 //           <div className="flex">
 //             <h5 className={`${styles.productDiscountPrice}`}>
 //               {data?.price === 0 ? data?.price : data?.discount_price + "$"}
@@ -204,7 +204,7 @@ export default MedicineCard;
 //         {click ? (
 //           <AiFillHeart
 //             size={22}
-//             className="cursor-pointer absolute right-2 top-5"
+//             className="absolute cursor-pointer right-2 top-5"
 //             onClick={() => setClick(!click)}
 //             color="red"
 //             title="Remove from wishlist"
@@ -212,7 +212,7 @@ export default MedicineCard;
 //         ) : (
 //           <AiOutlineHeart
 //             size={22}
-//             className="cursor-pointer absolute right-2 top-5"
+//             className="absolute cursor-pointer right-2 top-5"
 //             onClick={() => setClick(!click)}
 //             color="#333"
 //             title="Add to wishlist"
@@ -220,14 +220,14 @@ export default MedicineCard;
 //         )}
 //         <AiOutlineEye
 //           size={22}
-//           className="cursor-pointer absolute right-2 top-14"
+//           className="absolute cursor-pointer right-2 top-14"
 //           onClick={() => setOpen(!open)}
 //           color="#333"
 //           title="quick view"
 //         />
 //         <AiOutlineShoppingCart
 //           size={25}
-//           className="cursor-pointer absolute right-2 top-24"
+//           className="absolute cursor-pointer right-2 top-24"
 //           onClick={() => setOpen(!open)}
 //           color="#444"
 //           title="Add to cart"

@@ -116,18 +116,18 @@ const MedicineDetails = ({ data }) => {
             <div className="block w-full 800px:flex">
               <div className="w-full 800px:w-[50%]">
                 <img
-                  src={data?.images?.Paracetamol_one}
+                  src={data?.images?.drug_one}
                   alt=""
                   className={`w-[80%] transition-opacity duration-500 ${
                     click ? "opacity-100" : "opacity-70"
                   }`}
                 />
-                <div className="w-full flex gap-5 pt-5">
+                <div className="flex w-full gap-5 pt-5">
                   <div
                     className={`${select === 0 ? "border" : ""} cursor-pointer`}
                   >
                     <img
-                      src={data?.images?.Paracetamol_two}
+                      src={data?.images?.drug_two}
                       alt="image"
                       className="h-[200px] transition-opacity duration-500"
                       onClick={() => {
@@ -143,7 +143,7 @@ const MedicineDetails = ({ data }) => {
                     className={`${select === 0 ? "border" : ""} cursor-pointer`}
                   >
                     <img
-                      src={data?.images?.Paracetamol_three}
+                      src={data?.images?.drug_three}
                       alt="image"
                       className="h-[200px] transition-opacity duration-500"
                       onClick={() => {
@@ -171,19 +171,19 @@ const MedicineDetails = ({ data }) => {
                     </h3>
                   ) : null}
                 </div>
-                <div className="flex items-center mt-6 justify-between pr-3">
+                <div className="flex items-center justify-between pr-3 mt-6">
                   <div className="flex items-center">
                     <button
-                      className="bg-green-500 text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
+                      className="px-4 py-2 font-bold text-white transition duration-300 ease-in-out bg-green-500 rounded-l shadow-lg hover:opacity-75"
                       onClick={handleDecrementCount}
                     >
                       -
                     </button>
-                    <span className="bg-gray-200 text-gray-800 font-medium px-4 py-2">
+                    <span className="px-4 py-2 font-medium text-gray-800 bg-gray-200">
                       {count}
                     </span>
                     <button
-                      className="bg-green-500 text-white font-bold rounded-r px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
+                      className="px-4 py-2 font-bold text-white transition duration-300 ease-in-out bg-green-500 rounded-r shadow-lg hover:opacity-75"
                       onClick={handleIncrementCount}
                     >
                       +
@@ -225,7 +225,7 @@ const MedicineDetails = ({ data }) => {
                   className={`${styles.button} !mt-6 !rounded !h-11 flex items-center`}
                   onClick={() => addToCartHandler(data.id)}
                 >
-                  <span className="text-white flex items-center">
+                  <span className="flex items-center text-white">
                     Add to Cart <AiOutlineShoppingCart className="ml-1" />
                   </span>
                 </div>
@@ -261,7 +261,7 @@ const ProductDetailsInfo = ({ data }) => {
   const formattedDate = pythonDate.toLocaleDateString("en-US", options);
   return (
     <div className="bg-[#f5f6fb] px-3 800px:px-10 py-2 rounded">
-      <div className="w-full flex justify-around border-b pt-10 pb-2">
+      <div className="flex justify-around w-full pt-10 pb-2 border-b">
         <div className="relative">
           <h5
             className="text-[#000] text-[18px] px-1 leading-5 font-[500] cursor-pointer 800px:text-[20px]"
@@ -299,7 +299,7 @@ const ProductDetailsInfo = ({ data }) => {
         </>
       ) : null}
       {active === 2 && (
-        <div className="w-full block 800px:flex p-5">
+        <div className="block w-full p-5 800px:flex">
           <div className="w-full 800px:w-[50%]">
             <div className="flex items-center">
               <img

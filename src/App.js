@@ -20,6 +20,11 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
 import OrderSuccessPage from "./pages/order-success/OrderSuccessPage";
+import ShopDashboardPage from "./admin/pages/dashboard";
+import ShopCreateProduct from "./admin/pages/medicines";
+import AdminRoutes from "./utils/AdminRoute";
+import AllOrders from "./admin/pages/allorders";
+import AllDrugs from "./admin/pages/alldrugs";
 
 const App = () => {
   const [stripeKey, setStripeKey] = useState("");
@@ -55,8 +60,14 @@ const App = () => {
             }
           />
         </Route>
-        <Route element={<ShopHome />} path="/" exact />
+        <Route element={<AdminRoutes />}>
+        <Route element={<ShopCreateProduct />} path="/create-medicine" exact />
+        <Route element={<ShopDashboardPage />} path="/admin-dashboard" exact />
+        <Route element={<AllOrders />} path="/admin-all-order" exact />
+        <Route element={<AllDrugs />} path="/admin-all-drugs" exact />
+        </Route>
         <Route element={<Login />} path="/login" />
+        <Route element={<ShopHome />} path="/" exact />
         <Route element={<Register />} path="/register" />
         <Route exact path="/forgot-password" element={<ForgotPassword />} />
         <Route exact path="/accounts/api/activate/:uidb64/:token" element={<VerifySuccess />} />

@@ -26,7 +26,7 @@
 //           <div className="w-[90%] 800px:w-[60%] h-[90vh] overflow-y-scroll 800px:h-[75vh] bg-white rounded-md shadow-sm relative p-4">
 //             <RxCross1
 //               size={30}
-//               className="absolute right-3 top-3 z-50"
+//               className="absolute z-50 right-3 top-3"
 //               onClick={() => setOpen(false)}
 //             />
 //             <div className="block w-full 800px:flex">
@@ -69,15 +69,15 @@
 //                     {data.price ? data.price + "$" : null}
 //                   </h3>
 //                 </div>
-//                 <div className="flex items-center mt-12 justify-between pr-3">
+//                 <div className="flex items-center justify-between pr-3 mt-12">
 //                   <div>
-//                     <button className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out" onClick={handleDecrementCount}>
+//                     <button className="px-4 py-2 font-bold text-white transition duration-300 ease-in-out rounded-l shadow-lg bg-gradient-to-r from-teal-400 to-teal-500 hover:opacity-75" onClick={handleDecrementCount}>
 //                       -
 //                     </button>
 //                     <span className="bg-gray-200 text-gray-800 font-medium px-4 py-[11px]">
 //                       {count}
 //                     </span>
-//                     <button className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out" onClick={handleIncrementCount}>
+//                     <button className="px-4 py-2 font-bold text-white transition duration-300 ease-in-out rounded-l shadow-lg bg-gradient-to-r from-teal-400 to-teal-500 hover:opacity-75" onClick={handleIncrementCount}>
 //                       +
 //                     </button>
 //                   </div>
@@ -237,7 +237,7 @@ const MedicineDetailCard = ({ data, setOpen }) => {
         <div className="w-[90%] md:w-[60%] h-[90vh] md:h-[75vh] bg-white rounded-md shadow-sm p-4 overflow-y-scroll">
           <RxCross1
             size={30}
-            className="absolute top-3 right-3 z-50 cursor-pointer"
+            className="absolute z-50 cursor-pointer top-3 right-3"
             onClick={() => setOpen(false)}
           />
 
@@ -245,22 +245,22 @@ const MedicineDetailCard = ({ data, setOpen }) => {
             {/* Left Side - Product Image and Shop Details */}
             <div className="w-full md:w-[50%] md:pr-5">
               <img
-                src={data.images.Paracetamol_one}
+                src={data.images.drug_one}
                 alt={data.name}
-                className="w-full h-48 md:h-auto object-cover rounded-md mb-4"
+                className="object-cover w-full h-48 mb-4 rounded-md md:h-auto"
               />
 
               <div className="flex items-start mb-4">
                 <img
                   src={data.pharmacy_profile__business_image}
                   alt={data.business_name}
-                  className="w-12 h-12 rounded-full mr-2"
+                  className="w-12 h-12 mr-2 rounded-full"
                 />
                 <div>
-                  <h3 className="text-base md:text-lg font-semibold">
+                  <h3 className="text-base font-semibold md:text-lg">
                     {data.pharmacy__business_name}
                   </h3>
-                  <p className="text-sm md:text-base text-gray-600">
+                  <p className="text-sm text-gray-600 md:text-base">
                     ({data.ratings}) ratings
                   </p>
                 </div>
@@ -270,43 +270,43 @@ const MedicineDetailCard = ({ data, setOpen }) => {
                 className={`${styles.button} bg-[#000] mt-4 rounded h-11`}
                 onClick={handleMessageSubmit}
               >
-                <span className="text-white flex items-center">
+                <span className="flex items-center text-white">
                   Send Message <AiOutlineMessage className="ml-1" />
                 </span>
               </div> */}
 
-              <h5 className="text-sm text-red-400 mt-5">
+              <h5 className="mt-5 text-sm text-red-400">
                 ({data.sold_out}) Sold out
               </h5>
             </div>
 
             {/* Right Side - Product Details */}
             <div className="w-full md:w-[50%] md:pl-5 md:pt-5 md:pb-2">
-              <h1 className="text-lg md:text-2xl font-semibold">{data.name}</h1>
-              <p className="text-sm text-gray-600 mt-2">{data.description}</p>
+              <h1 className="text-lg font-semibold md:text-2xl">{data.name}</h1>
+              <p className="mt-2 text-sm text-gray-600">{data.description}</p>
 
               <div className="flex items-center mt-4">
-                <h4 className="text-lg md:text-xl font-semibold text-red-400">
+                <h4 className="text-lg font-semibold text-red-400 md:text-xl">
                   ${data.discount_price}
                 </h4>
-                <h3 className="text-base md:text-lg ml-2">
+                <h3 className="ml-2 text-base md:text-lg">
                   {data.original_price ? `$${data.original_price}` : null}
                 </h3>
               </div>
 
-              <div className="flex items-center mt-6 justify-between pr-3">
+              <div className="flex items-center justify-between pr-3 mt-6">
                 <div className="flex items-center">
                   <button
-                    className="bg-green-500 text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
+                    className="px-4 py-2 font-bold text-white transition duration-300 ease-in-out bg-green-500 rounded-l shadow-lg hover:opacity-75"
                     onClick={handleDecrementCount}
                   >
                     -
                   </button>
-                  <span className="bg-gray-200 text-gray-800 font-medium px-4 py-2">
+                  <span className="px-4 py-2 font-medium text-gray-800 bg-gray-200">
                     {count}
                   </span>
                   <button
-                    className="bg-green-500 text-white font-bold rounded-r px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
+                    className="px-4 py-2 font-bold text-white transition duration-300 ease-in-out bg-green-500 rounded-r shadow-lg hover:opacity-75"
                     onClick={handleIncrementCount}
                   >
                     +
@@ -349,7 +349,7 @@ const MedicineDetailCard = ({ data, setOpen }) => {
                 className={`${styles.button} mt-6 rounded h-11 flex items-center`}
                 onClick={() => addToCartHandler(data.id)}
               >
-                <span className="text-white flex items-center">
+                <span className="flex items-center text-white">
                   Add to Cart <AiOutlineShoppingCart className="ml-1" />
                 </span>
               </div>

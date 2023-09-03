@@ -27,11 +27,6 @@ const ProfileContent = ({ active }) => {
  
   const [selectedImage, setSelectedImage] = useState(null);
 
-  console.log(user, "it is user in profile", order, typeof order);
-
-  // useEffect(() => {
-  //   const fetch
-  // }, [])
 
   const fetchOrderData = async () => {
     const orders = await fetchOrder(user && user.user_id)
@@ -143,7 +138,7 @@ const ProfileContent = ({ active }) => {
           <br />
           <div className="w-full px-5">
             <form action="" onSubmit={handleSubmit} aria-required={true}>
-              <div className="w-full 800px:flex block  pb-3">
+              <div className="block w-full pb-3 800px:flex">
                 <div className="w-[100%] 800px:w-[50%]">
                   <label htmlFor="" className="block pb-2">
                     First Name
@@ -173,7 +168,7 @@ const ProfileContent = ({ active }) => {
                   />
                 </div>
               </div>
-              <div className="w-full 800px:flex block  pb-3">
+              <div className="block w-full pb-3 800px:flex">
                 <div className="w-[100%] 800px:w-[50%]">
                   <label htmlFor="" className="block pb-2">
                     Phone Number
@@ -204,33 +199,7 @@ const ProfileContent = ({ active }) => {
                   />
                 </div>
               </div>
-              {/* <div className="w-full 800px:flex block  pb-3">
-                <div className="w-[100%] 800px:w-[50%]">
-                  <label htmlFor="" className="block pb-2">
-                    Email Address
-                  </label>
-                  <input
-                    type="text"
-                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    disabled
-                  />
-                </div>
-                <div className="w-[100%] 800px:w-[50%]">
-                  <label htmlFor="" className="block pb-2">
-                    Zip code
-                  </label>
-                  <input
-                    type="text"
-                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-                    required
-                    value={zipCode}
-                    onChange={(e) => setZipCode(e.target.value)}
-                  />
-                </div>
-              </div> */}
+              
               <input
                 type="submit"
                 className={`w-[250px] h-[40px] border-[#3a244b] text-[#3a244b] border text-center rounded-[3px] mt-8 cursor-pointer`}
