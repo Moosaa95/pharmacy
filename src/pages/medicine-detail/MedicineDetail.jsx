@@ -39,10 +39,10 @@ export const MedicineDetailPage = () => {
     <div>
         <Header activeHeading={2}/>
         <MedicineDetails data={data}/>
-        {
+        {/* {
         
         data && <SuggestedProuduct data={data} />
-        }
+        } */}
         <Footer />
     </div>
   )

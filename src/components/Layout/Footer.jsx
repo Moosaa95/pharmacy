@@ -122,7 +122,7 @@ const Footer = () => {
   return (
     <footer className="bg-[#1a1a1a] text-white">
       <div className="px-8 py-12 md:flex md:justify-between md:items-center">
-        <div className="md:w-2/5">
+        {/* <div className="md:w-2/5">
           <h1 className="lg:text-4xl text-3xl font-semibold">
             <span className="text-[#56d879]">Subscribe</span> for news, events, and offers
           </h1>
@@ -137,7 +137,7 @@ const Footer = () => {
               Submit
             </button>
           </div>
-        </div>
+        </div> */}
         <div className="mt-8 md:mt-0">
           <h1 className="text-xl font-semibold mb-4">Follow Us</h1>
           <div className="flex items-center space-x-4">

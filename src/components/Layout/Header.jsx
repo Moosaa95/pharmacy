@@ -22,6 +22,8 @@ import WishList from "../wishlist/WishList.jsx";
 import { RxCross2 } from "react-icons/rx";
 import AuthContext from "../../context/AuthContext";
 
+
+
 // const Header = () => {
 //   const [searchItem, setSearchItem] = useState("");
 //   const [searchData, setSearchData] = useState(null);
@@ -87,15 +89,18 @@ import AuthContext from "../../context/AuthContext";
 // };
 
 const SearchResults = ({ searchData }) => {
+  
+  console.log(searchData, 'search data');
   return (
     <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4">
       {searchData.map((product, index) => {
+        console.log(product);
         const ProductName = product.name.replace(/\s+/g, "-");
         return (
-          <Link to={`/medicine/${ProductName}`} key={index}>
+          <Link to={`/medicine/search/${ProductName}`} key={index}>
             <div className="w-full flex items-start py-3">
               <img
-                src={product.image_Url[0].url}
+                src={product.images.drug_one}
                 alt={product.name}
                 className="w-[40px] h-[40px] mr-[10px]"
               />
@@ -130,6 +135,8 @@ const Header = ({
     phone: "",
     state: "",
   });
+  const [productDatas, setProductDatas] = useState([])
+  const { fetchDrugs } = useContext(AuthContext);
   const { cart } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
   // const {isAuthenticated, user} = useSelector((state) =>  state.user)
@@ -167,6 +174,23 @@ const Header = ({
   const isAuthenticated = false;
 
   // console.log(selectedCategory, 'select');
+  useEffect(() => {
+    // const data = productData.find((i) => i.name === medicineName)
+    // setData(data)
+    const fetchData = async () => {
+      try {
+        const productData = await fetchDrugs();
+        console.log(productData, "gutter drug");
+        setProductDatas(productData)
+        
+        
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleSearchChange = (e) => {
     const item = e.target.value;
@@ -174,9 +198,11 @@ const Header = ({
 
     // Simulate asynchronous search API call using setTimeout
     setTimeout(() => {
-      const filteredProducts = productData.filter((product) =>
+      const filteredProducts = productDatas.filter((product) =>
         product.name.toLowerCase().includes(item.toLowerCase())
       );
+
+      console.log('filtered', filteredProducts);
       setSearchData(filteredProducts);
     }, 300); // Add a delay to simulate API call (e.g., 300ms)
   };

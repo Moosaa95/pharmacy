@@ -49,7 +49,7 @@ const DropDown = ({ categoriesData, setDropDown, endpoint }) => {
   console.log('nav drop down', categoriesData);
 
   const handleSubmit = (category) => {
-    navigate(`/${endpoint}=${category}`);
+    navigate(`/medicines?category=${category}`);
     setDropDown(false);
     // Avoid using window.location.reload() as it reloads the entire page. Instead, let the React Router handle the navigation.
   };

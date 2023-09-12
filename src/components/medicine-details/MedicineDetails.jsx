@@ -322,7 +322,7 @@ const ProductDetailsInfo = ({ data }) => {
                 Joined on: <span className="font-[500]">{formattedDate}</span>
               </h5>
               <h5 className="font-[600]">
-                Total Products: <span className="font-[500]">{data.stock}</span>
+                Total Products in Stock: <span className="font-[500]">{data.stock}</span>
               </h5>
               {/* <h5 className="font-[600]">
                 Total Reviews: <span className="font-[500]">44</span>

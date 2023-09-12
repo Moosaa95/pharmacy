@@ -25,6 +25,7 @@ import ShopCreateProduct from "./admin/pages/medicines";
 import AdminRoutes from "./utils/AdminRoute";
 import AllOrders from "./admin/pages/allorders";
 import AllDrugs from "./admin/pages/alldrugs";
+import { MedicineSearchPage } from "./pages/medicine-detail/MedicineSearchPage";
 
 const App = () => {
   const [stripeKey, setStripeKey] = useState("");
@@ -47,6 +48,7 @@ const App = () => {
           <Route element={<ShopList />} path="/shops" />
           <Route path="shop/:pharmacyId" element={<ShopDetail />} />
           <Route path="medicine/:medicineId" element={<MedicineDetailPage />} />
+          <Route path="medicine/search/:medicineData" element={<MedicineSearchPage />} />
           {/* <Route path="category/:medicineId" element={<CategoryPage />} /> */}
           <Route exact path="/profile" element={<Profile />} />
         <Route path="/order/success" element={<OrderSuccessPage />} />
